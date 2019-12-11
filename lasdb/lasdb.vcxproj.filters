@@ -15,24 +15,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PointCloudIO.cpp">
+    <ClCompile Include="PointCloudDrawable.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Util.cpp">
+    <ClCompile Include="ReaderWriterLasdb.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PointCloudIO.h">
+    <ClInclude Include="PointCloudDrawable.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Util.h">
+    <ClInclude Include="ReaderWriterLasdb.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PointCloudRoamLibs.h">
+    <ClInclude Include="SharedData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
