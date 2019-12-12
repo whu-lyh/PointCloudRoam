@@ -14,6 +14,7 @@
 #pragma comment(lib, "liblas.lib")
 #pragma comment(lib, "liblas_c.lib")
 #pragma comment(lib, "pcl_common_debug.lib")
+#pragma comment(lib, "pcl_kdtree_debug.lib")
 #else
 #pragma comment(lib, "osg.lib")
 #pragma comment(lib, "osgDB.lib")
@@ -23,4 +24,5 @@
 #pragma comment(lib, "jsoncpp.lib")
 #pragma comment(lib, "liblas.lib")
 #pragma comment(lib, "pcl_common_release.lib")
+#pragma comment(lib, "pcl_kdtree_release.lib")
 #endif

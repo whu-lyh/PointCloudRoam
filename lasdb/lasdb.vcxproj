@@ -80,7 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>D:\Libraries_vs2017\lib\Release;D:\Software\OpenSceneGraph3.4.1\install\lib;$(LibraryPath)</LibraryPath>
     <TargetName>osgdb_lasdb</TargetName>
-    <ExecutablePath>D:\Software\OpenSceneGraph3.4.1\install\bin</ExecutablePath>
+    <ExecutablePath>D:\Software\OpenSceneGraph3.4.1\install\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

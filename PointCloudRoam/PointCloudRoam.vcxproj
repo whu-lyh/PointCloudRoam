@@ -76,7 +76,7 @@
     <LibraryPath>D:\Libraries_vs2017\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>D:\Libraries_vs2017\lib\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Libraries_vs2017\lib\Release;$(VC_LibraryPath_x64);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
