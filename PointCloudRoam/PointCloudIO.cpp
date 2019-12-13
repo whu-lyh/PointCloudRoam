@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include "Util.h"
+#include <iostream>
 
 using namespace boost;
 
@@ -23,13 +24,15 @@ namespace Util
 		while (reader.ReadNextPoint())
 		{
 			const liblas::Point& p = reader.GetPoint();
+			//std::cout << "p:		" << p.GetX() - offset.x << " " << p.GetY() - offset.y << " " << p.GetZ() - offset.z << " " << p.GetColor().GetRed() << " " << p.GetColor().GetGreen() << " " << p.GetColor().GetBlue() << " " << std::endl;
 			T pt;
 			pt.x = p.GetX()- offset.x;
 			pt.y = p.GetY()- offset.y;
 			pt.z = p.GetZ()- offset.z;
-			pt.r = p.GetColor().GetRed() >> 8;
-			pt.g = p.GetColor().GetGreen() >> 8;
-			pt.b = p.GetColor().GetBlue() >> 8;
+			pt.r = p.GetColor().GetRed();// >> 8;
+			pt.g = p.GetColor().GetGreen();// >> 8;
+			pt.b = p.GetColor().GetBlue();// >> 8;
+			//std::cout << "pt:		" << pt.x << " " << pt.y << " " << pt.z << " " << pt.r << " " << pt.g << " " << pt.b << " " << std::endl;
 			/*pt.intensity = p.GetIntensity();
 			pt.num_returns = p.GetNumberOfReturns();
 			pt.gps_time = p.GetTime();

@@ -43,10 +43,8 @@ osg::ref_ptr<osg::AnimationPath> creatAnimationPath2(const osg::Vec3& start_pos,
 int main()
 {
 	//define the path of point cloud and trajectory
-	//std::string pointfilepath = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
-	std::string pointfilepath = "C:\\Users\\22135\\Desktop/·¶ö©";
-	//std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
-	std::string traj_file = "C:\\Users\\22135\\Desktop/·¶ö©/785.traj";
+	std::string pointfilepath = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
+	std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
 
 	//preprocess point cloud
 	/*pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1 = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
