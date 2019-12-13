@@ -257,6 +257,7 @@ osg::ref_ptr<osg::Geode> loadPointCloud(const std::string& file_name, osg::Vec3d
 		for (auto pt : cloud->points)
 		{
 			coords->push_back(osg::Vec3(pt.x, pt.y, pt.z));
+			//here note that the color should be between 0 and 1
 			colors->push_back(osg::Vec4(pt.r / 255.0, pt.g / 255.0, pt.b / 255.0, 1.f));
 		}
 
