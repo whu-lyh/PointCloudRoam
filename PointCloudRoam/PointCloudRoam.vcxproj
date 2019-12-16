@@ -128,6 +128,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main1.cpp" />
     <ClCompile Include="main2.cpp" />
+    <ClCompile Include="main3.cpp" />
     <ClCompile Include="PointCloudIO.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
