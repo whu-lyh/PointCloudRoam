@@ -157,6 +157,7 @@ int main (int argc, char **argv)
 
 	//initialize two viewer and all point will be added as a child
 	osg::ref_ptr<osgViewer::CompositeViewer> comptviewer = new osgViewer::CompositeViewer ();
+	comptviewer->setName ("window");
 	//viewer origin
 	{
 		//create a group to contains all SceneData
@@ -201,13 +202,16 @@ int main (int argc, char **argv)
 		camera->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 1.f));
 
-		viewerorigin->setCameraManipulator (new osgGA::TrackballManipulator);
+		//if you wanted to roam point cloud these line should be commented,theses lines are used for show point cloud and it's correspond color
+		{
+		//viewerorigin->setCameraManipulator (new osgGA::TrackballManipulator);
 
-		// add the state manipulator
-		osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
-		statesetManipulator->setStateSet (viewerorigin->getCamera ()->getOrCreateStateSet ());
+		//// add the state manipulator
+		//osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
+		//statesetManipulator->setStateSet (viewerorigin->getCamera ()->getOrCreateStateSet ());
 
-		viewerorigin->addEventHandler (statesetManipulator.get ());
+		//viewerorigin->addEventHandler (statesetManipulator.get ());
+		}
 
 		osgUtil::Optimizer optimizer;
 		optimizer.optimize (root.get ());
@@ -266,9 +270,13 @@ int main (int argc, char **argv)
 		camera->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 1.f));
 
-		viewerrefine->setCameraManipulator (new osgGA::TrackballManipulator);
+		//if you wanted to roam point cloud these line should be commented,theses lines are used for show point cloud and it's correspond color
+		{
+			//these line correspond to the uper code line that are commented in viewer origin
+			/*viewerrefine->setCameraManipulator (new osgGA::TrackballManipulator);
 
-		viewerrefine->addEventHandler (new osgViewer::StatsHandler);
+			viewerrefine->addEventHandler (new osgViewer::StatsHandler);*/
+		}
 
 		osgUtil::Optimizer optimizer;
 		optimizer.optimize (root.get ());
@@ -283,6 +291,9 @@ int main (int argc, char **argv)
 			pWnd->setWindowDecoration (true);
 		}
 	}
+
+	//not useful?
+	comptviewer->setThreadingModel (osgViewer::CompositeViewer::CullDrawThreadPerContext);
 
 	comptviewer->realize ();
 
