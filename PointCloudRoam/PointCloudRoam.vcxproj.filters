@@ -33,6 +33,9 @@
     <ClCompile Include="main3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="main4.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PointCloudIO.h">

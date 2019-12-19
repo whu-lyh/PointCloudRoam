@@ -186,7 +186,7 @@ int main (int argc, char **argv)
 		osg::ref_ptr<osgViewer::Viewer> viewerorigin = new osgViewer::Viewer ();
 		viewerorigin->setName ("origin point cloud");
 		comptviewer->addView (viewerorigin);
-		viewerorigin->setUpViewInWindow (50, 50, 800, 450);
+		viewerorigin->setUpViewInWindow (100, 100, 1000, 563);
 
 		//set animation path manipulator
 		osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
@@ -218,11 +218,12 @@ int main (int argc, char **argv)
 
 		viewerorigin->setSceneData (root);
 		viewerorigin->home ();
+		viewerorigin->addEventHandler (new osgViewer::StatsHandler);
 
 		osgViewer::GraphicsWindow *pWnd = dynamic_cast<osgViewer::GraphicsWindow*>(viewerorigin->getCamera ()->getGraphicsContext ());
 		if (pWnd)
 		{
-			pWnd->setWindowRectangle (50, 50, 800, 450);
+			pWnd->setWindowRectangle (100, 100, 1000, 563);
 			pWnd->setWindowDecoration (true);
 		}
 	}
@@ -255,7 +256,7 @@ int main (int argc, char **argv)
 		osg::ref_ptr<osgViewer::Viewer> viewerrefine = new osgViewer::Viewer ();
 		viewerrefine->setName ("refine point cloud");
 		comptviewer->addView (viewerrefine);
-		viewerrefine->setUpViewInWindow (851, 50, 800, 450);
+		viewerrefine->setUpViewInWindow (1100, 100, 1000, 563);
 		//set animation path manipulator
 		osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
 		osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
@@ -283,11 +284,12 @@ int main (int argc, char **argv)
 
 		viewerrefine->setSceneData (root);
 		viewerrefine->home ();
+		viewerrefine->addEventHandler (new osgViewer::StatsHandler);
 
 		osgViewer::GraphicsWindow *pWnd = dynamic_cast<osgViewer::GraphicsWindow*>(viewerrefine->getCamera ()->getGraphicsContext ());
 		if (pWnd)
 		{
-			pWnd->setWindowRectangle (851, 50, 800, 450);
+			pWnd->setWindowRectangle (1100, 100, 1000, 563);
 			pWnd->setWindowDecoration (true);
 		}
 	}
