@@ -3,35 +3,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QGridLayout>
-#include <osgQt/GraphicsWindowQt>
+#include "PointCloudRoamLibs.h"
 #include "mygraphicwindowqt.h"
-#include <osgQt/QFontImplementation>
-
-#include <osgDB/ReadFile>
-#include <osgDB/WriteFile>
-#include <osgDB/Registry>
-
-#include <osgGA/StateSetManipulator>
-#include <osgGA/TrackballManipulator>
-#include <osgViewer/CompositeViewer>
-#include <osgViewer/ViewerEventHandlers>
-
-#include <osg/Geode>
-#include <osg/Camera>
-#include <osg/ShapeDrawable>
-#include <osg/Sequence>
-#include <osg/PolygonMode>
-
-#include <osgText/Font>
-#include <osgText/Text>
-
-
-#include <QWidget>
-#include <QOpenGLContext>
-#include <QWindow>
-#include <QSurface>
-#include <QDebug>
+#include "Util.h"
+#include "PointCloudIO.h"
 
 class MainWindow : public QWidget {
     Q_OBJECT
@@ -52,25 +27,53 @@ public:
         _comViewer->frame();
     }
 
-    void setSceneData(osg::Node* node)
-    {
-        _viewer->setSceneData(node);
-    }
-    void setCameraManipulator(osgGA::CameraManipulator* manipulator, bool resetPosition = true)
-    {
-        _viewer->setCameraManipulator(manipulator, resetPosition);
-    }
+    //void setSceneData(osg::Node* node)
+    //{
+    //    _viewer->setSceneData(node);
+    //}
+    //void setCameraManipulator(osgGA::CameraManipulator* manipulator, bool resetPosition = true)
+    //{
+    //    _viewer->setCameraManipulator(manipulator, resetPosition);
+    //}
+	inline void setOriginPointFile (std::string unparsed) { _pointfilepathorigin = unparsed; }
+	inline void setRefinePointFile (std::string unparsed) { _pointfilepathrefine = unparsed; }
+	inline void setTrajFile (std::string unparsed) { _trajFile = unparsed; }
 
+	inline std::string getOriginPointFile () { return _pointfilepathorigin; }
+	inline std::string getRefinePointFile () { return _pointfilepathrefine; }
+	inline std::string getTrajPointFile () { return _trajFile; }
 
+	void loadTraj (const std::string& traj_file,
+		const osg::ref_ptr<osg::AnimationPath>& animation_path,
+		const osg::Vec3d& offset);
+
+	osg::ref_ptr<osg::Geode> loadPointCloud (const std::string& file_name, osg::Vec3d& offset);
+
+	float computeRunTime (osg::Vec3 start, osg::Vec3 end);
+
+	//创建路径
+	osg::ref_ptr<osg::AnimationPath> creatAnimationPath2 (const osg::Vec3& start_pos, 
+		const osg::Vec3& end_pos,
+		float start_angle, 
+		float end_angle, 
+		float start_time, 
+		float end_time);
+
+	void createOriginView ();
+	void createRefineView ();
 
 private:
-    osgViewer::Viewer* _viewer;
-    osgViewer::CompositeViewer* _comViewer;
+	osgViewer::Viewer *_viewer, *_viewerrefine, *_viewerorigin;
+	osgViewer::CompositeViewer *_comViewer;
     int               _timerID;
     MyGraphicWindowQt* _graphicsWindow;
+
+	std::string _pointfilepathorigin;
+	std::string _pointfilepathrefine;
+	std::string _trajFile;
+
 public slots:
     void onStartTimer();
-
 };
 
 #endif // MAINWINDOW_H

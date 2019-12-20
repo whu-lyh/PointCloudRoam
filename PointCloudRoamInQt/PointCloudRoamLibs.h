@@ -1,11 +1,57 @@
 #pragma once
 
+#ifndef POINTCLOUDROAMLIB_H
+#define POINTCLOUDROAMLIB_H
 /*
 this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 */
 
 #pragma warning(disable: 4273)
 #pragma warning(disable: 4819)
+
+#include <iostream>
+
+#include <pcl/kdtree/kdtree_flann.h>
+#include <osg/Point>
+#include <osgViewer/Viewer>
+#include <osgViewer/CompositeViewer>
+#include <osgViewer/ViewerEventHandlers>
+#include <osgGA/TrackballManipulator>
+#include <osgGA/FlightManipulator>
+#include <osgGA/StateSetManipulator>
+#include <osgGA/AnimationPathManipulator>
+#include <osg/Light>
+#include <osg/Material>
+#include <osg/PagedLOD>
+#include <osg/MatrixTransform>
+#include <osgDB/Input>
+#include <osg/PositionAttitudeTransform>
+#include <osgGA/OrbitManipulator>
+#include <osgUtil/Optimizer>
+#include <json/json.h>
+
+#include <osgQt/GraphicsWindowQt>
+#include <osgQt/QFontImplementation>
+
+#include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
+#include <osgDB/Registry>
+
+#include <osg/Geode>
+#include <osg/Camera>
+#include <osg/ShapeDrawable>
+#include <osg/Sequence>
+#include <osg/PolygonMode>
+
+#include <osgText/Font>
+#include <osgText/Text>
+
+#include <QWidget>
+#include <QOpenGLContext>
+#include <QWindow>
+#include <QSurface>
+#include <QDebug>
+#include <QGridLayout>
 
 #ifdef _DEBUG
 #pragma comment(lib, "OpenThreadsd.lib")
@@ -48,3 +94,5 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #pragma comment(lib, "Qt5OpenGL.lib")
 
 #endif
+
+#endif //POINTCLOUDROAMLIB_H

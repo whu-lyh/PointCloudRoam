@@ -1,10 +1,13 @@
-﻿
+﻿/*
+this program is used to roam point cloud in qt using multi thread method
+*/
+#pragma once
+
+#define NOMINMAX
+
 #include <windows.h>// this line have to be at the first line of the whole header files
 
 #include <QApplication>
-#include "mygraphicwindowqt.h"
-
-#include <osgDB/ReadFile>
 
 #include "mainwindow.h"
 
@@ -12,21 +15,36 @@ int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
 
-    //osg::Node* model = osgDB::readNodeFile("cow.osg");
-    osg::Node* model = osgDB::readNodeFile("D:/Software/OpenSceneGraph-Data/cow.osgt");
+	// The qt window
+	MainWindow widget;
 
-    osg::ref_ptr<osg::Group> group = new osg::Group;
-    group->addChild(model);
+	//osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface ();
+	//if (!wsi)
+	//{
+	//	osg::notify (osg::NOTICE) << "Error, no WindowSystemInterface available, cannot create windows." << std::endl;
+	//	return 1;
+	//}
 
-    // The qt window
-    MainWindow widget;
+	//unsigned int width, height;
+	//osg::GraphicsContext::ScreenIdentifier main_screen_id;
 
-    // set the scene to render
-    widget.setSceneData(group.get());
-    widget.setCameraManipulator(new osgGA::TrackballManipulator);
+	//main_screen_id.readDISPLAY ();
+	//main_screen_id.setUndefinedScreenDetailsToDefaultScreen ();
+	//wsi->getScreenResolution (main_screen_id, width, height);
 
-    widget.setGeometry(100, 100, 800, 600);
-    widget.show();
+	//define the path of point cloud and trajectory
+	std::string pointfilepathorigin = "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN";
+	std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
+	std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+
+	widget.setOriginPointFile (pointfilepathorigin);
+	widget.setRefinePointFile (pointfilepathrefine);
+	widget.setTrajFile (traj_file);
+	
+	widget.createOriginView ();
+	widget.createRefineView ();
+
+	widget.show();
 
     return app.exec();
 }
