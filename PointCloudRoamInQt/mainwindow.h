@@ -27,14 +27,14 @@ public:
         _comViewer->frame();
     }
 
-    //void setSceneData(osg::Node* node)
-    //{
-    //    _viewer->setSceneData(node);
-    //}
-    //void setCameraManipulator(osgGA::CameraManipulator* manipulator, bool resetPosition = true)
-    //{
-    //    _viewer->setCameraManipulator(manipulator, resetPosition);
-    //}
+	void setSceneData (osg::Node* node)
+	{
+		_viewerorigin->setSceneData (node);
+	}
+	void setCameraManipulator (osgGA::CameraManipulator* manipulator, bool resetPosition = true)
+	{
+		_viewerorigin->setCameraManipulator (manipulator, resetPosition);
+	}
 	inline void setOriginPointFile (std::string unparsed) { _pointfilepathorigin = unparsed; }
 	inline void setRefinePointFile (std::string unparsed) { _pointfilepathrefine = unparsed; }
 	inline void setTrajFile (std::string unparsed) { _trajFile = unparsed; }

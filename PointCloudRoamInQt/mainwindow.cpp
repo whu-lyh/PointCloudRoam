@@ -17,30 +17,32 @@ MainWindow::MainWindow()
 
 	this->setWindowTitle (tr("Point Cloud Roamming"));
 
-	//initialize two viewer and all point will be added as a child
+	////initialize two viewer and all point will be added as a child
 	_comViewer = new osgViewer::CompositeViewer ();
-	_comViewer->setName ("window");
+	//_comViewer->setName ("window");
 
 	_viewerorigin = new osgViewer::Viewer();
 	_viewerorigin->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
-	_viewerrefine = new osgViewer::Viewer();
-	_viewerrefine->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
-	
-	//{
-	//	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::CullDrawThreadPerContext);
-	//	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::DrawThreadPerContext);
-	//	_comViewer->setThreadingModel (osgViewer::CompositeViewer::CullThreadPerCameraDrawThreadPerContext);
-	_comViewer->setThreadingModel(osgViewer::CompositeViewer::SingleThreaded);
-	//	QTimer::singleShot (10, this, SLOT (onStartTimer ()));//不要即可启动定时器，否则窗体还未创建，容易帧循环时出错
-	//}
+	//_viewerorigin->setName ("_pointfilepathorigin");
+	////_viewerrefine = new osgViewer::Viewer();
+	////_viewerrefine->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
+	//
+	{
+	////_comViewer->setThreadingModel(osgViewer::CompositeViewer::CullDrawThreadPerContext);
+	////	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::DrawThreadPerContext);
+		_comViewer->setThreadingModel (osgViewer::CompositeViewer::CullThreadPerCameraDrawThreadPerContext);
+	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::SingleThreaded);
+		QTimer::singleShot (10, this, SLOT (onStartTimer ()));//不要即可启动定时器，否则窗体还未创建，容易帧循环时出错
+	}
 
 	osg::Camera* camera = _viewerorigin->getCamera ();
 	camera->setGraphicsContext (_graphicsWindow);
 	camera->setViewport (new osg::Viewport (0, 0, width (), height ()));
+	camera->setClearColor (osg::Vec4f (1, 1, 1, 1));
 
 	_comViewer->addView (_viewerorigin);
-	_comViewer->addView (_viewerrefine);
-    _comViewer->realize();//一定要在此实现，否则不能将qopenglcontext移动到图形线程
+	////_comViewer->addView (_viewerrefine);
+	_comViewer->realize();//一定要在此实现，否则不能将qopenglcontext移动到图形线程
 }
 
 void MainWindow::onStartTimer()
@@ -220,7 +222,7 @@ void MainWindow::createOriginView ()
 	camera->setName ("camera origin");
 	camera->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
 	camera->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 1.f));
+	camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
 
 	//if you wanted to roam point cloud these line should be commented,theses lines are used for show point cloud and it's correspond color
 	{

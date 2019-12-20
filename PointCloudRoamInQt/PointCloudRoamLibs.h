@@ -92,6 +92,7 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #pragma comment(lib, "Qt5Gui.lib")
 #pragma comment(lib, "Qt5Widgets.lib")
 #pragma comment(lib, "Qt5OpenGL.lib")
+#pragma comment(lib, "opengl32.lib")
 
 #endif
 
