@@ -18,20 +18,6 @@ int main(int argc, char** argv)
 	// The qt window
 	MainWindow widget;
 
-	osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface ();
-	if (!wsi)
-	{
-		osg::notify (osg::NOTICE) << "Error, no WindowSystemInterface available, cannot create windows." << std::endl;
-		return 1;
-	}
-
-	unsigned int width, height;
-	osg::GraphicsContext::ScreenIdentifier main_screen_id;
-
-	main_screen_id.readDISPLAY ();
-	main_screen_id.setUndefinedScreenDetailsToDefaultScreen ();
-	wsi->getScreenResolution (main_screen_id, width, height);
-
 	//define the path of point cloud and trajectory
 	std::string pointfilepathorigin = "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN";
 	std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
@@ -72,7 +58,7 @@ int main(int argc, char** argv)
 	osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
 	osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
 	animation_path->setLoopMode (osg::AnimationPath::LOOP);
-	widget.loadTraj (widget.getTrajPointFile (), animation_path, osg::Vec3d ());
+	widget.loadTraj (widget.getTrajPointFile (), animation_path, osg::Vec3d ());//middle point will interplated
 	animation_path_manipulator->setAnimationPath (animation_path);
 	//_viewerorigin->setCameraManipulator (animation_path_manipulator);
 
@@ -88,7 +74,7 @@ int main(int argc, char** argv)
 	widget.setSceneData (root.get ());
 	widget.setCameraManipulator (animation_path_manipulator);
 
-	widget.setGeometry (100, 100, 800, 600);
+	widget.setGeometry (100, 100, 2000, 618);
 	widget.show();
 
     return app.exec();

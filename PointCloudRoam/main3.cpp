@@ -52,6 +52,7 @@ int main (int argc, char **argv)
 	if (arguments.read ("-1")){
 	}
 
+	//get the resolution of the window screen
 	osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface ();
 	if (!wsi)
 	{

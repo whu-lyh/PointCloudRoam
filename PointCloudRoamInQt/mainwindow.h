@@ -66,7 +66,8 @@ private:
 	osgViewer::Viewer *_viewer, *_viewerrefine, *_viewerorigin;
 	osgViewer::CompositeViewer *_comViewer;
     int               _timerID;
-    MyGraphicWindowQt* _graphicsWindow;
+    MyGraphicWindowQt* _graphicsWindoworigin;
+	MyGraphicWindowQt* _graphicsWindowrefine;
 
 	std::string _pointfilepathorigin;
 	std::string _pointfilepathrefine;

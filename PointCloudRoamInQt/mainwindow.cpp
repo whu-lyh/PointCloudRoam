@@ -3,40 +3,71 @@
 
 MainWindow::MainWindow()
 {
-    osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(osg::DisplaySettings::instance().get());
-    traits->width = width();
-    traits->height = height();
-    traits->doubleBuffer = true;
-    _graphicsWindow = new MyGraphicWindowQt(traits.get());
-    _graphicsWindow->setMainWindow(this);
+	//get the resolution of the window screen
+	osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface ();
+	if (!wsi)
+	{
+		osg::notify (osg::NOTICE) << "Error, no WindowSystemInterface available, cannot create windows." << std::endl;
+		//return 1;
+	}
 
-    QGridLayout* grid = new QGridLayout;
-    grid->setMargin(0);
-    grid->addWidget(_graphicsWindow->getGLWidget(), 0, 0);
-    setLayout(grid);
+	unsigned int winwidth = width (), winheight = height ();
+	osg::GraphicsContext::ScreenIdentifier main_screen_id;
+
+	main_screen_id.readDISPLAY ();
+	main_screen_id.setUndefinedScreenDetailsToDefaultScreen ();
+	wsi->getScreenResolution (main_screen_id, winwidth, winheight);
+
+    osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(osg::DisplaySettings::instance().get());
+	traits->width = 0.5*width ();
+	traits->height = 0.5*height ();
+    traits->doubleBuffer = true;
+    _graphicsWindoworigin = new MyGraphicWindowQt(traits.get());
+    _graphicsWindoworigin->setMainWindow(this);
+
+	osg::ref_ptr<osg::GraphicsContext::Traits> traits2 = new osg::GraphicsContext::Traits (osg::DisplaySettings::instance ().get ());
+	traits2->width = 0.5*width ();
+	traits2->height = 0.5*height ();
+	traits2->doubleBuffer = true;
+	_graphicsWindowrefine = new MyGraphicWindowQt (traits2.get ());
+	_graphicsWindowrefine->setMainWindow (this);
+
+	QGridLayout* grid = new QGridLayout;
+	grid->setMargin (0);//set the distance between widget and the boundary
+	grid->setSpacing (10);//set the distance between the widget which distribute up and down
+	grid->addWidget (_graphicsWindoworigin->getGLWidget (), 0, 0);
+	grid->addWidget (_graphicsWindowrefine->getGLWidget (), 0, 1);//控件名，行，列，占用行数，占用列数，对齐方式
+	setLayout (grid);
 
 	this->setWindowTitle (tr("Point Cloud Roamming"));
 
 	////initialize two viewer and all point will be added as a child
 	_comViewer = new osgViewer::CompositeViewer ();
-	//_comViewer->setName ("window");
+	_comViewer->setName ("window");
 
 	_viewerorigin = new osgViewer::Viewer();
 	_viewerorigin->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
-	//_viewerorigin->setName ("_pointfilepathorigin");
+	_viewerorigin->setName ("origin");
 	////_viewerrefine = new osgViewer::Viewer();
 	////_viewerrefine->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
 	//
 	{
-	////_comViewer->setThreadingModel(osgViewer::CompositeViewer::CullDrawThreadPerContext);
-	////	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::DrawThreadPerContext);
+	//	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::CullDrawThreadPerContext);
+	//	//OSG 将为每一个图形设备上下文（GraphicsContext）创建一个图形线程，以实现并行的渲染工作。
+	//	//如果有多个 CPU 的话，那么系统将尝试把线程分别放在不同的 CPU上运行，不过每一帧结束前都会强制同步所有的线程。
+	//	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::DrawThreadPerContext);
+		//这一线程模型同样会为每个 GraphicsContext 创建线程，并分配
+		//到不同的 CPU 上。十分值得注意的是，这种模式会在当前帧的所有线程完成工作之前，开始下一帧。
 		_comViewer->setThreadingModel (osgViewer::CompositeViewer::CullThreadPerCameraDrawThreadPerContext);
-	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::SingleThreaded);
+	//	//这一线程模型将为每个 GraphicsContext和每个摄像机创建线程，这种模式同样不会等待前一次的渲染结束，而是返回仿真循环并再
+	//	//次开始执行 frame 函数。如果您使用四核甚至更高的系统配置，那么使用这一线程模型将最大限度地发挥多 CPU的处理能力。
+		//_comViewer->setThreadingModel(osgViewer::CompositeViewer::SingleThreaded);
+	//	//OSG不会创建任何新线程来完成场景的筛选和渲染，因而也不会对渲染效率的提高有任何助益。它适合任何配置下使用。
 		QTimer::singleShot (10, this, SLOT (onStartTimer ()));//不要即可启动定时器，否则窗体还未创建，容易帧循环时出错
 	}
 
 	osg::Camera* camera = _viewerorigin->getCamera ();
-	camera->setGraphicsContext (_graphicsWindow);
+	camera->setGraphicsContext (_graphicsWindoworigin);
 	camera->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	camera->setClearColor (osg::Vec4f (1, 1, 1, 1));
 
