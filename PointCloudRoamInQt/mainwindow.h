@@ -31,17 +31,23 @@ public:
 	{
 		_viewerorigin->setSceneData (node);
 	}
+
+	void setSceneData (osg::Node* nodeorigin, osg::Node* noderefine)
+	{
+		_viewerorigin->setSceneData (nodeorigin);
+		_viewerrefine->setSceneData (noderefine);
+	}
+
 	void setCameraManipulator (osgGA::CameraManipulator* manipulator, bool resetPosition = true)
 	{
 		_viewerorigin->setCameraManipulator (manipulator, resetPosition);
 	}
-	inline void setOriginPointFile (std::string unparsed) { _pointfilepathorigin = unparsed; }
-	inline void setRefinePointFile (std::string unparsed) { _pointfilepathrefine = unparsed; }
-	inline void setTrajFile (std::string unparsed) { _trajFile = unparsed; }
 
-	inline std::string getOriginPointFile () { return _pointfilepathorigin; }
-	inline std::string getRefinePointFile () { return _pointfilepathrefine; }
-	inline std::string getTrajPointFile () { return _trajFile; }
+	void setCameraManipulator (osgGA::CameraManipulator* manipulatororigin, osgGA::CameraManipulator* manipulatorrefine, bool resetPositionorigin = true, bool resetPositionrefine = true)
+	{
+		_viewerorigin->setCameraManipulator (manipulatororigin, resetPositionorigin);
+		_viewerrefine->setCameraManipulator (manipulatorrefine, resetPositionrefine);
+	}
 
 	void loadTraj (const std::string& traj_file,
 		const osg::ref_ptr<osg::AnimationPath>& animation_path,
@@ -59,19 +65,12 @@ public:
 		float start_time, 
 		float end_time);
 
-	void createOriginView ();
-	void createRefineView ();
-
 private:
 	osgViewer::Viewer *_viewer, *_viewerrefine, *_viewerorigin;
 	osgViewer::CompositeViewer *_comViewer;
     int               _timerID;
     MyGraphicWindowQt* _graphicsWindoworigin;
 	MyGraphicWindowQt* _graphicsWindowrefine;
-
-	std::string _pointfilepathorigin;
-	std::string _pointfilepathrefine;
-	std::string _trajFile;
 
 public slots:
     void onStartTimer();

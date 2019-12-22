@@ -205,13 +205,13 @@ int main (int argc, char **argv)
 
 		//if you wanted to roam point cloud these line should be commented,theses lines are used for show point cloud and it's correspond color
 		{
-		//viewerorigin->setCameraManipulator (new osgGA::TrackballManipulator);
+		//	viewerorigin->setCameraManipulator (new osgGA::TrackballManipulator);
 
-		//// add the state manipulator
-		//osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
-		//statesetManipulator->setStateSet (viewerorigin->getCamera ()->getOrCreateStateSet ());
+		//	//add the state manipulator
+		//	osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
+		//	statesetManipulator->setStateSet (viewerorigin->getCamera ()->getOrCreateStateSet ());
 
-		//viewerorigin->addEventHandler (statesetManipulator.get ());
+		//	viewerorigin->addEventHandler (statesetManipulator.get ());
 		}
 
 		osgUtil::Optimizer optimizer;

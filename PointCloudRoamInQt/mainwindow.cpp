@@ -18,11 +18,11 @@ MainWindow::MainWindow()
 	main_screen_id.setUndefinedScreenDetailsToDefaultScreen ();
 	wsi->getScreenResolution (main_screen_id, winwidth, winheight);
 
-    osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits(osg::DisplaySettings::instance().get());
-	traits->width = 0.5*width ();
-	traits->height = 0.5*height ();
-    traits->doubleBuffer = true;
-    _graphicsWindoworigin = new MyGraphicWindowQt(traits.get());
+    osg::ref_ptr<osg::GraphicsContext::Traits> traits1 = new osg::GraphicsContext::Traits(osg::DisplaySettings::instance().get());
+	traits1->width = 0.5*width ();
+	traits1->height = 0.5*height ();
+    traits1->doubleBuffer = true;
+	_graphicsWindoworigin = new MyGraphicWindowQt (traits1.get ());
     _graphicsWindoworigin->setMainWindow(this);
 
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits2 = new osg::GraphicsContext::Traits (osg::DisplaySettings::instance ().get ());
@@ -36,8 +36,8 @@ MainWindow::MainWindow()
 	grid->setMargin (0);//set the distance between widget and the boundary
 	grid->setSpacing (10);//set the distance between the widget which distribute up and down
 	grid->addWidget (_graphicsWindoworigin->getGLWidget (), 0, 0);
-	grid->addWidget (_graphicsWindowrefine->getGLWidget (), 0, 1);//控件名，行，列，占用行数，占用列数，对齐方式
-	setLayout (grid);
+	grid->addWidget (_graphicsWindowrefine->getGLWidget (), 0, 1);//addWidget,控件名，行，列，占用行数，占用列数，对齐方式
+	this->setLayout (grid);
 
 	this->setWindowTitle (tr("Point Cloud Roamming"));
 
@@ -48,31 +48,44 @@ MainWindow::MainWindow()
 	_viewerorigin = new osgViewer::Viewer();
 	_viewerorigin->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
 	_viewerorigin->setName ("origin");
-	////_viewerrefine = new osgViewer::Viewer();
-	////_viewerrefine->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
-	//
+	_viewerrefine = new osgViewer::Viewer();
+	_viewerrefine->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
+	_viewerrefine->setName ("refine");
+	
 	{
-	//	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::CullDrawThreadPerContext);
-	//	//OSG 将为每一个图形设备上下文（GraphicsContext）创建一个图形线程，以实现并行的渲染工作。
-	//	//如果有多个 CPU 的话，那么系统将尝试把线程分别放在不同的 CPU上运行，不过每一帧结束前都会强制同步所有的线程。
-	//	//_comViewer->setThreadingModel(osgViewer::CompositeViewer::DrawThreadPerContext);
+		//_comViewer->setThreadingModel(osgViewer::CompositeViewer::CullDrawThreadPerContext);
+		//OSG 将为每一个图形设备上下文（GraphicsContext）创建一个图形线程，以实现并行的渲染工作。
+		//如果有多个 CPU 的话，那么系统将尝试把线程分别放在不同的 CPU上运行，不过每一帧结束前都会强制同步所有的线程。
+		//_comViewer->setThreadingModel(osgViewer::CompositeViewer::DrawThreadPerContext);
 		//这一线程模型同样会为每个 GraphicsContext 创建线程，并分配
 		//到不同的 CPU 上。十分值得注意的是，这种模式会在当前帧的所有线程完成工作之前，开始下一帧。
 		_comViewer->setThreadingModel (osgViewer::CompositeViewer::CullThreadPerCameraDrawThreadPerContext);
-	//	//这一线程模型将为每个 GraphicsContext和每个摄像机创建线程，这种模式同样不会等待前一次的渲染结束，而是返回仿真循环并再
-	//	//次开始执行 frame 函数。如果您使用四核甚至更高的系统配置，那么使用这一线程模型将最大限度地发挥多 CPU的处理能力。
+		//这一线程模型将为每个 GraphicsContext和每个摄像机创建线程，这种模式同样不会等待前一次的渲染结束，而是返回仿真循环并再
+		//次开始执行 frame 函数。如果您使用四核甚至更高的系统配置，那么使用这一线程模型将最大限度地发挥多 CPU的处理能力。
 		//_comViewer->setThreadingModel(osgViewer::CompositeViewer::SingleThreaded);
-	//	//OSG不会创建任何新线程来完成场景的筛选和渲染，因而也不会对渲染效率的提高有任何助益。它适合任何配置下使用。
+		//OSG不会创建任何新线程来完成场景的筛选和渲染，因而也不会对渲染效率的提高有任何助益。它适合任何配置下使用。
 		QTimer::singleShot (10, this, SLOT (onStartTimer ()));//不要即可启动定时器，否则窗体还未创建，容易帧循环时出错
 	}
 
-	osg::Camera* camera = _viewerorigin->getCamera ();
-	camera->setGraphicsContext (_graphicsWindoworigin);
-	camera->setViewport (new osg::Viewport (0, 0, width (), height ()));
-	camera->setClearColor (osg::Vec4f (1, 1, 1, 1));
+	osg::ref_ptr<osg::Camera> cameraorigin = _viewerorigin->getCamera ();
+	cameraorigin->setGraphicsContext (_graphicsWindoworigin);
+	cameraorigin->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
+	cameraorigin->setViewport (new osg::Viewport (0, 0, width (), height ()));
+	cameraorigin->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	cameraorigin->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
+
+	osg::ref_ptr<osg::Camera> camerarefine = _viewerrefine->getCamera ();
+	camerarefine->setGraphicsContext (_graphicsWindowrefine);
+	//camerarefine->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);//如果采用这种透视投影的方式将会使得视角中的物体近处比较稀疏
+	camerarefine->setViewport (new osg::Viewport (0, 0, width (), height ()));
+	camerarefine->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	camerarefine->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
+
+	_viewerorigin->addEventHandler (new osgViewer::StatsHandler);
+	_viewerrefine->addEventHandler (new osgViewer::StatsHandler);
 
 	_comViewer->addView (_viewerorigin);
-	////_comViewer->addView (_viewerrefine);
+	_comViewer->addView (_viewerrefine);
 	_comViewer->realize();//一定要在此实现，否则不能将qopenglcontext移动到图形线程
 }
 
@@ -205,146 +218,4 @@ osg::ref_ptr<osg::AnimationPath> MainWindow::creatAnimationPath2 (const osg::Vec
 
 	//返回Path
 	return animationPath;
-}
-
-void MainWindow::createOriginView ()
-{
-	//get all point cloud file and return a list of point cloud file dir+name+ext
-	std::vector<std::string> v_pointnamelistorigin;
-	Util::get_files (getOriginPointFile (), ".las", v_pointnamelistorigin);
-
-	//create a group to contains all SceneData
-	osg::ref_ptr<osg::Group> root = new osg::Group ();
-	//root->getOrCreateStateSet()->setAttribute(new osg::Point(1.f), osg::StateAttribute::ON);
-	osg::StateSet* ss = root->getOrCreateStateSet ();
-	osg::Light *light = new osg::Light;
-	light->setAmbient (osg::Vec4 (0.5f, 0.5f, 0.5f, .25f));
-	ss->setAttribute (light, osg::StateAttribute::ON);
-	ss->setMode (GL_BLEND, osg::StateAttribute::ON);
-	ss->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
-
-	// process all point, meanwhile add them in osg root for roamming all points
-	for (auto pointfilename : v_pointnamelistorigin)
-	{
-		osg::Vec3d offseti;
-		osg::ref_ptr<osg::Geode> modeli = loadPointCloud (pointfilename, offseti);
-		modeli->getOrCreateStateSet ()->setAttribute (new osg::Point (1.5f), osg::StateAttribute::ON);
-		//add modeli
-		osg::ref_ptr<osg::MatrixTransform> mti = new osg::MatrixTransform ();
-		mti->setMatrix (osg::Matrix::translate (offseti.x (), offseti.y (), offseti.z ()));
-		mti->addChild (modeli);
-		root->addChild (mti);
-	}
-
-	_viewerorigin->setThreadingModel (osgViewer::Viewer::DrawThreadPerContext);
-	_viewerorigin->setName ("origin point cloud");
-	//_comViewer->addView (_viewerorigin);
-	_viewerorigin->setUpViewInWindow (100, 100, 1000, 563);
-
-	//set animation path manipulator
-	osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
-	osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
-	animation_path->setLoopMode (osg::AnimationPath::LOOP);
-	loadTraj (getTrajPointFile (), animation_path, osg::Vec3d ());
-	animation_path_manipulator->setAnimationPath (animation_path);
-	_viewerorigin->setCameraManipulator (animation_path_manipulator);
-
-	osg::ref_ptr<osg::Camera> camera = _viewerorigin->getCamera ();    //3.2后不建议直接new camera
-	camera->setName ("camera origin");
-	camera->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
-	camera->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
-
-	//if you wanted to roam point cloud these line should be commented,theses lines are used for show point cloud and it's correspond color
-	{
-		//_viewerorigin->setCameraManipulator (new osgGA::TrackballManipulator);
-
-		//// add the state manipulator
-		//osg::ref_ptr<osgGA::StateSetManipulator> statesetManipulator = new osgGA::StateSetManipulator;
-		//statesetManipulator->setStateSet (_viewerorigin->getCamera ()->getOrCreateStateSet ());
-
-		//_viewerorigin->addEventHandler (statesetManipulator.get ());
-	}
-
-	osgUtil::Optimizer optimizer;
-	optimizer.optimize (root.get ());
-	// set the scene to render
-	_viewerorigin->setSceneData (root);
-	_viewerorigin->home ();
-	_viewerorigin->addEventHandler (new osgViewer::StatsHandler);
-
-	osgViewer::GraphicsWindow *pWnd = dynamic_cast<osgViewer::GraphicsWindow*>(_viewerorigin->getCamera ()->getGraphicsContext ());
-	if (pWnd)
-	{
-		pWnd->setWindowRectangle (100, 100, 1000, 563);
-		pWnd->setWindowDecoration (true);
-	}
-}
-void MainWindow::createRefineView ()
-{
-	//get all point cloud file and return a list of point cloud file dir+name+ext
-	std::vector<std::string>  v_pointnamelistrefine;
-	Util::get_files (getRefinePointFile (), ".las", v_pointnamelistrefine);
-
-	//create a group to contains all SceneData
-	osg::ref_ptr<osg::Group> root = new osg::Group ();
-	//root->getOrCreateStateSet()->setAttribute(new osg::Point(1.f), osg::StateAttribute::ON);
-	osg::StateSet* ss = root->getOrCreateStateSet ();
-	osg::Light *light = new osg::Light;
-	light->setAmbient (osg::Vec4 (0.5f, 0.5f, 0.5f, .25f));
-	ss->setAttribute (light, osg::StateAttribute::ON);
-	ss->setMode (GL_BLEND, osg::StateAttribute::ON);
-	ss->setRenderingHint (osg::StateSet::TRANSPARENT_BIN);
-
-	// process all point, meanwhile add them in osg root for roamming all points
-	for (auto pointfilename : v_pointnamelistrefine)
-	{
-		osg::Vec3d offseti;
-		osg::ref_ptr<osg::Geode> modeli = loadPointCloud (pointfilename, offseti);
-		modeli->getOrCreateStateSet ()->setAttribute (new osg::Point (1.5f), osg::StateAttribute::ON);
-		//add modeli
-		osg::ref_ptr<osg::MatrixTransform> mti = new osg::MatrixTransform ();
-		mti->setMatrix (osg::Matrix::translate (offseti.x (), offseti.y (), offseti.z ()));
-		mti->addChild (modeli);
-		root->addChild (mti);
-	}
-
-	_viewerrefine->setName ("refine point cloud");
-	//_comViewer->addView (_viewerrefine);
-	_viewerrefine->setUpViewInWindow (1100, 100, 1000, 563);
-	//set animation path manipulator
-	osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
-	osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
-	animation_path->setLoopMode (osg::AnimationPath::LOOP);
-	loadTraj (getTrajPointFile (), animation_path, osg::Vec3d ());
-	animation_path_manipulator->setAnimationPath (animation_path);
-	_viewerrefine->setCameraManipulator (animation_path_manipulator);
-
-	osg::ref_ptr<osg::Camera> camera = _viewerrefine->getCamera ();    //3.2后不建议直接new camera
-	camera->setName ("camera refine");
-	camera->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
-	camera->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 1.f));
-
-	//if you wanted to roam point cloud these line should be commented,theses lines are used for show point cloud and it's correspond color
-	{
-		//these line correspond to the uper code line that are commented in viewer origin
-		/*viewerrefine->setCameraManipulator (new osgGA::TrackballManipulator);
-
-		viewerrefine->addEventHandler (new osgViewer::StatsHandler);*/
-	}
-
-	osgUtil::Optimizer optimizer;
-	optimizer.optimize (root.get ());
-
-	_viewerrefine->setSceneData (root);
-	_viewerrefine->home ();
-	_viewerrefine->addEventHandler (new osgViewer::StatsHandler);
-
-	osgViewer::GraphicsWindow *pWnd = dynamic_cast<osgViewer::GraphicsWindow*>(_viewerrefine->getCamera ()->getGraphicsContext ());
-	if (pWnd)
-	{
-		pWnd->setWindowRectangle (1100, 100, 1000, 563);
-		pWnd->setWindowDecoration (true);
-	}
 }
