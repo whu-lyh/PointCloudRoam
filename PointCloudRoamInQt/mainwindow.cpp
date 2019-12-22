@@ -69,7 +69,7 @@ MainWindow::MainWindow()
 
 	osg::ref_ptr<osg::Camera> cameraorigin = _viewerorigin->getCamera ();
 	cameraorigin->setGraphicsContext (_graphicsWindoworigin);
-	cameraorigin->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
+	//cameraorigin->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
 	cameraorigin->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	cameraorigin->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	cameraorigin->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
@@ -81,8 +81,26 @@ MainWindow::MainWindow()
 	camerarefine->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	camerarefine->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
 
+	//there are still many things that i don't know the usage and function
+	// add the state manipulator
+	_viewerorigin->addEventHandler (new osgGA::StateSetManipulator (_viewerorigin->getCamera ()->getOrCreateStateSet ()));
+	// add the stats handler ///key S & W but meet a trouble
 	_viewerorigin->addEventHandler (new osgViewer::StatsHandler);
+	// add the record camera path handler
+	_viewerorigin->addEventHandler (new osgViewer::RecordCameraPathHandler);
+	// add the thread model handler
+	_viewerorigin->addEventHandler (new osgViewer::ThreadingHandler);
+	// add the window size toggle handler ///key F but meet a trouble
+	_viewerorigin->addEventHandler (new osgViewer::WindowSizeHandler);
+
+	// add the stats handler ///key S & W but meet a trouble
 	_viewerrefine->addEventHandler (new osgViewer::StatsHandler);
+	// add the record camera path handler
+	_viewerrefine->addEventHandler (new osgViewer::RecordCameraPathHandler);
+	// add the thread model handler
+	_viewerrefine->addEventHandler (new osgViewer::ThreadingHandler);
+	// add the window size toggle handler ///key F but meet a trouble
+	_viewerrefine->addEventHandler (new osgViewer::WindowSizeHandler);
 
 	_comViewer->addView (_viewerorigin);
 	_comViewer->addView (_viewerrefine);

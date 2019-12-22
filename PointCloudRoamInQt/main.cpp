@@ -27,6 +27,7 @@ int main(int argc, char** argv)
 	std::vector<std::string> v_pointnamelistorigin, v_pointnamelistrefine;
 	Util::get_files (pointfilepathorigin, ".las", v_pointnamelistorigin);
 	Util::get_files (pointfilepathrefine, ".las", v_pointnamelistrefine);
+	osg::ElapsedTime elapsedTime;
 
 	//origin viewer
 	//create a group to contains all SceneData
@@ -80,6 +81,9 @@ int main(int argc, char** argv)
 		}
 	}
 
+	double loadTime = elapsedTime.elapsedTime_m ();
+	std::cout << "Load time " << loadTime << "ms" << std::endl;
+
 	//set animation path manipulator
 	osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
 	osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
@@ -87,12 +91,7 @@ int main(int argc, char** argv)
 	widget.loadTraj (traj_file, animation_path, osg::Vec3d ());//middle point will interplated
 	animation_path_manipulator->setAnimationPath (animation_path);
 
-	//osg::ref_ptr<osg::Camera> camera = _viewerorigin->getCamera ();    //3.2后不建议直接new camera
-	//camera->setName ("camera origin");
-	//camera->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
-	//camera->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	//camera->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
-
+	// optimize the scene graph, remove redundant nodes and state etc.
 	osgUtil::Optimizer optimizer1;
 	optimizer1.optimize (rootorigin.get ());
 
