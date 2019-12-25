@@ -21,6 +21,7 @@ MainWindow::MainWindow()
     osg::ref_ptr<osg::GraphicsContext::Traits> traits1 = new osg::GraphicsContext::Traits(osg::DisplaySettings::instance().get());
 	traits1->width = 0.5*width ();
 	traits1->height = 0.5*height ();
+	traits1->windowDecoration = true;
     traits1->doubleBuffer = true;
 	_graphicsWindoworigin = new MyGraphicWindowQt (traits1.get ());
     _graphicsWindoworigin->setMainWindow(this);
@@ -28,6 +29,7 @@ MainWindow::MainWindow()
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits2 = new osg::GraphicsContext::Traits (osg::DisplaySettings::instance ().get ());
 	traits2->width = 0.5*width ();
 	traits2->height = 0.5*height ();
+	traits2->windowDecoration = true;//doesn't know what's difference
 	traits2->doubleBuffer = true;
 	_graphicsWindowrefine = new MyGraphicWindowQt (traits2.get ());
 	_graphicsWindowrefine->setMainWindow (this);
@@ -73,6 +75,9 @@ MainWindow::MainWindow()
 	cameraorigin->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	cameraorigin->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	cameraorigin->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
+	GLenum buffer = traits1->doubleBuffer ? GL_BACK : GL_FRONT;
+	cameraorigin->setDrawBuffer (buffer);
+	cameraorigin->setReadBuffer (buffer);
 
 	osg::ref_ptr<osg::Camera> camerarefine = _viewerrefine->getCamera ();
 	camerarefine->setGraphicsContext (_graphicsWindowrefine);
@@ -106,9 +111,12 @@ MainWindow::MainWindow()
 	_comViewer->addView (_viewerrefine);
 	_comViewer->realize();//一定要在此实现，否则不能将qopenglcontext移动到图形线程
 }
-
+	//每隔10ms就调用frame()来绘制一帧，而这个定时器是在构造函数的时候就开始调用了，
+	//没有等待QT中OpenGL环境的生成。在这里我把定时器的部分给改进了一下，
+	//等待OSG的环境初始化完成在启动定时器，这个警告就没有了
 void MainWindow::onStartTimer()
 {
+	QWidget::show ();//Modefication for warning about "QOpenGLContext::swapBuffers() called with non-exposed window, behavior is undefined"
     _timerID=startTimer(10);
 }
 

@@ -22,6 +22,7 @@ public:
     {
         //_comViewer->frame();
     }
+	//timer event
     virtual void timerEvent(QTimerEvent* event)
     {
         _comViewer->frame();

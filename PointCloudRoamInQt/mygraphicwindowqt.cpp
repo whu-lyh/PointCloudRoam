@@ -708,7 +708,9 @@ bool MyGraphicWindowQt::makeCurrentImplementation()
         //这是在另一个线程中做得，需要让主线程来movetothread，需要用信号槽机制告诉主线程
         _moveThread=new MoveThread;
         connect(_moveThread,SIGNAL(moveThread(QThread*)),this,SLOT(onMoveOpenglContextToNewThread(QThread*)),Qt::BlockingQueuedConnection);
-        emit _moveThread->moveThread(QThread::currentThread());
+        //BlockingQueuedConnection like sendmessage,QueuedConnection like postmessage,DirectConnection can't be in multi thread
+		//AutoConnection thread is same --> call slot ,is different --> like QueuedConnection 
+		emit _moveThread->moveThread(QThread::currentThread());
         qglcx->makeCurrent(_widget->windowHandle());
     }else{
         _widget->makeCurrent();

@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	//std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
 	//std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
 
-	///dataset wuhan cehuiyuan
+	///dataset wuhan GI
 	std::string pointfilepathorigin = "F:/Data/wuhan/origin";
 	std::string pointfilepathrefine = "F:/Data/wuhan/refine";
 	std::string traj_file = "F:/Data/wuhan/small-trajfile.traj";//osg roam only need a few of view points which is different from others
@@ -51,8 +51,13 @@ int main(int argc, char** argv)
 	//create a group to contains all SceneData
 	osg::ref_ptr<osg::Group> rootorigin = new osg::Group ();
 	{
+		//for modefining some attribute of the point or line
 		//root->getOrCreateStateSet()->setAttribute(new osg::Point(1.f), osg::StateAttribute::ON);
 		osg::StateSet* ssorigin = rootorigin->getOrCreateStateSet ();
+		//set point's size
+		osg::ref_ptr<osg::Point> pointorigin = new osg::Point ();
+		pointorigin->setSize (2);
+		ssorigin->setAttribute (pointorigin);
 		osg::Light *lightorigin = new osg::Light;
 		lightorigin->setAmbient (osg::Vec4 (0.5f, 0.5f, 0.5f, .25f));
 		ssorigin->setAttribute (lightorigin, osg::StateAttribute::ON);
@@ -77,8 +82,13 @@ int main(int argc, char** argv)
 	//create a group to contains all SceneData
 	osg::ref_ptr<osg::Group> rootrefine = new osg::Group ();
 	{
+		//for modefining some attribute of the point or line
 		//root->getOrCreateStateSet()->setAttribute(new osg::Point(1.f), osg::StateAttribute::ON);
 		osg::StateSet* ssrefine = rootrefine->getOrCreateStateSet ();
+		//set point's size
+		osg::ref_ptr<osg::Point> pointrefine = new osg::Point ();
+		pointrefine->setSize (20.0);//didn't work
+		ssrefine->setAttribute (pointrefine);
 		osg::Light *lightrefine = new osg::Light;
 		lightrefine->setAmbient (osg::Vec4 (0.5f, 0.5f, 0.5f, .25f));
 		ssrefine->setAttribute (lightrefine, osg::StateAttribute::ON);
