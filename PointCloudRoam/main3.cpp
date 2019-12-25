@@ -68,9 +68,15 @@ int main (int argc, char **argv)
 	wsi->getScreenResolution (main_screen_id, width, height);
 
 	//define the path of point cloud and trajectory
-	std::string pointfilepathorigin = "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN";
-	std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
-	std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+	///dataset shanghai lu
+	//std::string pointfilepathorigin = "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN";
+	//std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
+	//std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+
+	///dataset wuhan cehuiyuan
+	std::string pointfilepathorigin = "D:/Data/wuhan/origin";
+	std::string pointfilepathrefine = "D:/Data/wuhan/refine";
+	std::string traj_file = "D:/Data/wuhan/small-trajfile.traj";//osg roam only need a few of view points which is different from others
 
 	//preprocess point cloud
 	/*pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1 = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();

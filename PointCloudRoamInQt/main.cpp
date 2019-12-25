@@ -19,14 +19,32 @@ int main(int argc, char** argv)
 	MainWindow widget;
 
 	//define the path of point cloud and trajectory
-	std::string pointfilepathorigin = "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN";
-	std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
-	std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+	///dataset shanghai lu
+	//std::string pointfilepathorigin = "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN";
+	//std::string pointfilepathrefine = "F:/shanghai/Lu-block-data/All-in-lu/REFINE";
+	//std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+
+	///dataset wuhan cehuiyuan
+	std::string pointfilepathorigin = "F:/Data/wuhan/origin";
+	std::string pointfilepathrefine = "F:/Data/wuhan/refine";
+	std::string traj_file = "F:/Data/wuhan/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+
+	//make sure that the dictories are exist
+	if (Util::file_exist(pointfilepathorigin)&& Util::file_exist(pointfilepathrefine))
+	{
+		Util::ensure_dir (pointfilepathorigin);
+		Util::ensure_dir (pointfilepathrefine);
+	}
 
 	//get all point cloud file and return a list of point cloud file dir+name+ext
 	std::vector<std::string> v_pointnamelistorigin, v_pointnamelistrefine;
 	Util::get_files (pointfilepathorigin, ".las", v_pointnamelistorigin);
 	Util::get_files (pointfilepathrefine, ".las", v_pointnamelistrefine);
+	if (v_pointnamelistorigin.size () == 0 || v_pointnamelistrefine.size () == 0)
+	{
+		std::cout << "please check the directory of the input data" << std::endl;
+	}
+
 	osg::ElapsedTime elapsedTime;
 
 	//origin viewer

@@ -21,7 +21,7 @@ namespace Util
 		filesystem::path fullpath(dir);
 		if (!filesystem::exists(fullpath))
 		{
-			filesystem::create_directory(fullpath);
+			filesystem::create_directories(fullpath);
 		}
 	}
 
