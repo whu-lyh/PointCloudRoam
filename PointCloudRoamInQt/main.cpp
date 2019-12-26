@@ -25,9 +25,9 @@ int main(int argc, char** argv)
 	//std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
 
 	///dataset wuhan GI
-	std::string pointfilepathorigin = "F:/Data/wuhan/origin";
-	std::string pointfilepathrefine = "F:/Data/wuhan/refine";
-	std::string traj_file = "F:/Data/wuhan/small-trajfile.traj";//osg roam only need a few of view points which is different from others
+	std::string pointfilepathorigin = "F:/Data/Zhangjiang8Block/outPC/origin";
+	std::string pointfilepathrefine = "F:/Data/Zhangjiang8Block/outPC/refine";
+	std::string traj_file = "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj";//osg roam only need a few of view points which is different from others
 
 	//make sure that the dictories are exist
 	if (Util::file_exist(pointfilepathorigin)&& Util::file_exist(pointfilepathrefine))
