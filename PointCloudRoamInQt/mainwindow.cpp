@@ -139,28 +139,37 @@ void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 	//route_pts->pop_back();
 
 	float time = 0.f;
-	float angle = 0.f;  //绕Z轴旋转，初始方向为Y轴正向（绕X轴旋转90°之后）
-	float roll = M_PI_2;
+	float angle = 0.f;  //初始方向为Y轴正向（绕X轴旋转90°之后）
+	float heading = M_PI_2;  //绕Z轴旋转
+	//The following should know the osg's coordinate's difinition
 	for (auto iter = route_pts->begin (), end = route_pts->end (); iter + 1 != end;)
 	{
 		osg::Vec3 pos (*iter);
 		iter++;
 		if (iter->x () == pos.x ())
 		{
-			angle = 0;
+			angle = 0; //just be the same direction as default direction and need no more rotation
 			if (iter->y () < pos.y ())
-				angle = M_PI;
+				angle = M_PI; // if the y coordinate is decrease meaning that the object is backforward moving
 		}
 		else if (iter->x () > pos.x ())
 		{
-			angle = M_PI_2 - std::atan ((iter->y () - pos.y ()) / (iter->x () - pos.x ()));
+			angle = M_PI_2 - std::atan ((iter->y () - pos.y ()) / (iter->x () - pos.x ())); //calculate the angle to rotate around the z axis
 		}
 		else
 		{
-			angle = -(M_PI_2 + std::atan ((iter->y () - pos.y ()) / (iter->x () - pos.x ())));
+			angle = -(M_PI_2 + std::atan ((iter->y () - pos.y ()) / (iter->x () - pos.x ()))); //negative direction
 		}
 
-		osg::Quat rotation (osg::Quat (roll, osg::Vec3 (1.f, 0.f, 0.f)) * osg::Quat (-angle, osg::Vec3 (0.f, 0.f, 1.f)));
+		//here i need to learn more about quaternions to handle the rotation of the heading change while roamming
+		//one quaternion is a rotation
+		//osg::Quat rotation (osg::Quat (heading, osg::Vec3 (1.f, 0.f, 0.f)) * osg::Quat (-angle, osg::Vec3 (0.f, 0.f, 1.f)));
+			// current direction is opengl's direction so here should change the coordinate to the osg's coordinate
+		osg::Quat rotation (osg::Quat (heading, osg::Vec3 (1.f, 0.f, 0.f)) * osg::Quat (-angle, osg::Vec3 (0.f, 0.f, 1.f)));
+		//add each ControlPoint(a.k.a. viewpoint ==> position rotation scale) to the path
+		//position ==> a 3D point osg::Vec3
+		//rotation ==> a quaternion (osg::Quat) to control the view angle (a quaternion for 3d rotation is a multiplation conducted on 4D manifold) see more detail in bilibili
+		//scale ==> default to be const osg::Vec3d& scale(1.0,1.0,1.0)
 		animation_path->insert (time, osg::AnimationPath::ControlPoint (pos - offset, rotation));
 		time += computeRunTime (pos, *iter);
 	}
