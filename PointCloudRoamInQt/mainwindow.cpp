@@ -136,11 +136,17 @@ void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 		route_pts->push_back (osg::Vec3d (x, y, z));
 	}
 	ifs.close ();
+
 	//route_pts->pop_back();
+	/*The up line is required while if the ending of the traj file have a space line which is empty but have a placeholder charactor
+	the last line should be pop out or delete manully,
+	I think this misrotation is caused due to the last number which are initiallized automatically to be zero and  further leading the rotation is disordered
+	In the future, if the point cloud roamming work is needed ,the .traj file should be attached more attention and emphasized carefully
+	*/
 
 	float time = 0.f;
-	float angle = 0.f;  //初始方向为Y轴正向（绕X轴旋转90°之后）
-	float heading = M_PI_2;  //绕Z轴旋转
+	float angle = 0.f;  //初始方向为Y轴正向（绕X轴旋转90°之后），之后就沿着z轴转
+	float heading = M_PI_2;  //绕x轴旋转90度
 	//The following should know the osg's coordinate's difinition
 	for (auto iter = route_pts->begin (), end = route_pts->end (); iter + 1 != end;)
 	{

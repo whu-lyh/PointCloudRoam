@@ -707,6 +707,7 @@ bool MyGraphicWindowQt::makeCurrentImplementation()
         if(!qglcx->thread()) return true;//窗口关闭时
         //这是在另一个线程中做得，需要让主线程来movetothread，需要用信号槽机制告诉主线程
         _moveThread=new MoveThread;
+		//moveToThread 无法移动有parent的object
         connect(_moveThread,SIGNAL(moveThread(QThread*)),this,SLOT(onMoveOpenglContextToNewThread(QThread*)),Qt::BlockingQueuedConnection);
         //BlockingQueuedConnection like sendmessage,QueuedConnection like postmessage,DirectConnection can't be in multi thread
 		//AutoConnection thread is same --> call slot ,is different --> like QueuedConnection 
