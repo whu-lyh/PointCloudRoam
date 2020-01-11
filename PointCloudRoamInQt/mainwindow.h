@@ -73,6 +73,9 @@ private:
     MyGraphicWindowQt* _graphicsWindoworigin;
 	MyGraphicWindowQt* _graphicsWindowrefine;
 
+signals:
+	void waitASecound ();
+
 public slots:
     void onStartTimer();
 };

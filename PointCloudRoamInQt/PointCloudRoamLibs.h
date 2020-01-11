@@ -51,6 +51,8 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #include <QWindow>
 #include <QSurface>
 #include <QDebug>
+#include <QThread>
+#include <QTime>
 #include <QGridLayout>
 
 #ifdef _DEBUG

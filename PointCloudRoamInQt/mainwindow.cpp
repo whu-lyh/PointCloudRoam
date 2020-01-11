@@ -111,6 +111,8 @@ MainWindow::MainWindow()
 	_comViewer->addView (_viewerrefine);
 	_comViewer->realize();//一定要在此实现，否则不能将qopenglcontext移动到图形线程
 }
+
+//void waitASecound () {}
 	//每隔10ms就调用frame()来绘制一帧，而这个定时器是在构造函数的时候就开始调用了，
 	//没有等待QT中OpenGL环境的生成。在这里我把定时器的部分给改进了一下，
 	//等待OSG的环境初始化完成在启动定时器，这个警告就没有了
@@ -118,6 +120,7 @@ void MainWindow::onStartTimer()
 {
 	QWidget::show ();//Modefication for warning about "QOpenGLContext::swapBuffers() called with non-exposed window, behavior is undefined"
     _timerID=startTimer(10);
+	//the up line is not working for error of "QObject::startTimer: Timers can only be used with threads started with QThread"
 }
 
 void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path,
