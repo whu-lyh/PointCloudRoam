@@ -132,11 +132,13 @@ void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 	ifs.open (traj_file);
 	int num_pts;
 	ifs >> num_pts;
-	while (!ifs.eof ())
+	int tmpi = 0;
+	while (tmpi < num_pts)
 	{
 		double x, y, z;
 		ifs >> x >> y >> z;
 		route_pts->push_back (osg::Vec3d (x, y, z));
+		++tmpi;
 	}
 	ifs.close ();
 
