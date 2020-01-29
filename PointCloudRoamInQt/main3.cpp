@@ -38,10 +38,13 @@ struct Point3I
 
 float computeRunTime (osg::Vec3 start, osg::Vec3 end);
 
+//load trajectory
 void loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path, const osg::Vec3d& offset);
 
+//load point cloud
 osg::ref_ptr<osg::Geode> loadPointCloud (const std::string& file_name, osg::Vec3d& offset);
 
+//createAnimationPath ?? seems there is no functional
 osg::ref_ptr<osg::AnimationPath> creatAnimationPath2 (const osg::Vec3& start_pos, const osg::Vec3& end_pos,
 	float start_angle, float end_angle, float start_time, float end_time);
 
