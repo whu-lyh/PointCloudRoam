@@ -71,6 +71,9 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #pragma comment(lib, "pcl_common_debug.lib")
 #pragma comment(lib, "pcl_kdtree_debug.lib")
 
+#pragma comment(lib, "glogd.lib")
+#pragma comment(lib, "opencv_core347d.lib")
+
 #pragma comment(lib, "Qt5Core.lib")
 #pragma comment(lib, "Qt5Guid.lib")
 #pragma comment(lib, "Qt5Widgetsd.lib")
@@ -89,6 +92,9 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #pragma comment(lib, "liblas.lib")
 #pragma comment(lib, "pcl_common_release.lib")
 #pragma comment(lib, "pcl_kdtree_release.lib")
+
+#pragma comment(lib, "glog.lib")
+#pragma comment(lib, "opencv_core347.lib")
 
 #pragma comment(lib, "Qt5Core.lib")
 #pragma comment(lib, "Qt5Gui.lib")

@@ -172,8 +172,9 @@ void parametersSetting ( ConfigParameter& config_param )
 
 	//print params
 	std::cout << "------------------------------Parameters------------------------------";
-	std::cout << "#Data info";
-	std::cout << "PointFilepathOrigin: " << str1;
-	std::cout << "PointFilepathRefine: " << str2;
-	std::cout << "Trajectory File: " << str2;
+	std::cout << "#Data info" << std::endl;
+	std::cout << "PointFilepathOrigin: " << str1 << std::endl;
+	std::cout << "PointFilepathRefine: " << str2 << std::endl;
+	std::cout << "Trajectory File: " << str2 << std::endl;
+	std::cout << std::endl;
 }

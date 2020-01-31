@@ -8,16 +8,16 @@
 #include <opencv2/core.hpp>
 #include <glog/logging.h>
 
-#ifdef UTILITY_EXPORT
-#define UTILITY_API __declspec(dllexport)
-#else
-#define UTILITY_API __declspec(dllimport)
-#endif
+//#ifdef UTILITY_EXPORT
+//#define UTILITY_API __declspec(dllexport)
+//#else
+//#define UTILITY_API __declspec(dllimport)
+//#endif
 
 namespace Util
 {
 	//class: singleton class for parameter configuration
-	class UTILITY_API Config
+	class /*UTILITY_API*/ Config
 	{
 	private:
 		static boost::shared_ptr<Config> config_;
