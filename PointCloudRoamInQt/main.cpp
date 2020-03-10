@@ -3,7 +3,9 @@ this program is used to roam point cloud in qt using multi thread method
 and exploit the yaml file to locate the point cloud and trajectory file
 */
 #pragma once
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 
 #include <windows.h>// this line have to be at the first line of the whole header files
 
@@ -31,13 +33,14 @@ int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
 
-	std::string config_file = argv [1];
+	//std::string config_file = argv [1];
 
 	//std::string config_file = "F:/20190818_OldTown/20190818_OldTown.yaml";
+	std::string config_file = "E:/Vs15WorkSpace/PointCloudRoam/PointCloudRoamInQt/Configuration.yaml";
 	if ( !Util::Config::setParameterFile ( config_file ) )
 	{
-		std::cout << "The configuration file is not existed! plz check it." << std::endl;
-		return -1;
+		LOG ( ERROR ) << "The configuration file is not existed! plz check it." << std::endl;
+		return 0;
 	}
 		
 	ConfigParameter config_param;
@@ -64,8 +67,8 @@ int main(int argc, char** argv)
 	Util::get_files (pointfilepathrefine, ".las", v_pointnamelistrefine);
 	if (v_pointnamelistorigin.size () == 0 || v_pointnamelistrefine.size () == 0)
 	{
-		std::cout << "please check the directory of the input data" << std::endl;
-		return -1;
+		LOG ( ERROR ) << "please check the directory of the input data" << std::endl;
+		return 0;
 	}
 
 	osg::ElapsedTime elapsedTime;
@@ -133,13 +136,17 @@ int main(int argc, char** argv)
 	}
 
 	double loadTime = elapsedTime.elapsedTime_m ();
-	std::cout << "Load time " << loadTime << "ms" << std::endl;
+	LOG ( INFO ) << "Load time " << loadTime << "ms";
 
 	//set animation path manipulator
 	osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
 	osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
 	animation_path->setLoopMode (osg::AnimationPath::LOOP);
-	widget.loadTraj (traj_file, animation_path, osg::Vec3d ());//middle point will interplated
+	if ( ! widget.loadTraj ( traj_file, animation_path, osg::Vec3d () ) )//middle point will interplated
+	{
+		LOG ( ERROR ) << "The traj file fails to be loaded";
+		return 0;
+	}
 	animation_path_manipulator->setAnimationPath (animation_path);
 
 	// optimize the scene graph, remove redundant nodes and state etc.
@@ -171,10 +178,10 @@ void parametersSetting ( ConfigParameter& config_param )
 	config_param.dataInfo.pointfilepathrefine = Util::Config::get<std::string> ( "TrajectoryFile" );
 
 	//print params
-	std::cout << "------------------------------Parameters------------------------------";
-	std::cout << "#Data info" << std::endl;
-	std::cout << "PointFilepathOrigin: " << str1 << std::endl;
-	std::cout << "PointFilepathRefine: " << str2 << std::endl;
-	std::cout << "Trajectory File: " << str2 << std::endl;
-	std::cout << std::endl;
+	LOG ( INFO ) << "------------------------------Parameters------------------------------" << std::endl;
+	LOG ( INFO ) << "#Data info" ;
+	LOG ( INFO ) << "PointFilepathOrigin: " << str1 ;
+	LOG ( INFO ) << "PointFilepathRefine: " << str2 ;
+	LOG ( INFO ) << "Trajectory File: " << str2 ;
+	LOG ( INFO ) << std::endl;
 }

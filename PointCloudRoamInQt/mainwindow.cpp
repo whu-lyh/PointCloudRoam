@@ -3,6 +3,16 @@
 
 MainWindow::MainWindow()
 {
+	//glog setting
+	FLAGS_logtostderr = true;
+	google::FlushLogFiles ( google::GLOG_INFO );
+	google::InitGoogleLogging ( "PointCloudRoam" );
+	google::SetLogFilenameExtension ( "log_" );
+	FLAGS_log_dir = "./";
+	FLAGS_logbufsecs = 0;
+	//set the precision of the out data 4 accurate number behind dot
+	LOG ( INFO ) << std::setiosflags ( std::ios::fixed ) << std::setprecision ( 4 );
+
 	//get the resolution of the window screen
 	osg::GraphicsContext::WindowingSystemInterface* wsi = osg::GraphicsContext::getWindowingSystemInterface ();
 	if (!wsi)
@@ -123,13 +133,18 @@ void MainWindow::onStartTimer()
 	//the up line is not working for error of "QObject::startTimer: Timers can only be used with threads started with QThread"
 }
 
-void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path,
+bool MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path,
 	const osg::Vec3d& offset)
 {
 	//load trajectory file
 	osg::ref_ptr<osg::Vec3Array> route_pts = new osg::Vec3Array ();
 	std::ifstream ifs;
 	ifs.open (traj_file);
+	if (!ifs)
+	{
+		LOG(ERROR) << "The traj file open fails, Please check it. " << traj_file;
+		return false;
+	}
 	int num_pts;
 	ifs >> num_pts;
 	int tmpi = 0;
@@ -137,6 +152,13 @@ void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 	{
 		double x, y, z;
 		ifs >> x >> y >> z;
+
+		if ( typeid( y ) != typeid( double ) || typeid( x ) != typeid( double ) || typeid( z ) != typeid( double ) || !ifs )
+		{
+			LOG ( ERROR ) << "The traj file format is incorrect. Please check it" << std::endl;
+			return false;
+		}
+
 		route_pts->push_back (osg::Vec3d (x, y, z));
 		++tmpi;
 	}
@@ -184,6 +206,7 @@ void MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 		animation_path->insert (time, osg::AnimationPath::ControlPoint (pos - offset, rotation));
 		time += computeRunTime (pos, *iter);
 	}
+	return true;
 }
 
 float MainWindow::computeRunTime (osg::Vec3 start, osg::Vec3 end)

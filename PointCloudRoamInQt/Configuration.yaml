@@ -7,7 +7,13 @@
 #TrajectoryFile: "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj"
 
 #dataset wuhan GI
-PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
-PointFilepathRefine: "F:/Data/Zhangjiang8Block/outPC/refine"
+#PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
+#PointFilepathRefine: "F:/Data/Zhangjiang8Block/outPC/refine"
 #osg roam only need a few of view points which is different from others
-TrajectoryFile: "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj"
+#TrajectoryFile: "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj"
+
+#dataset Estonia
+PointFilepathOrigin: "D:/data/Estonia/roam/20200309/origin2"
+PointFilepathRefine: "D:/data/Estonia/roam/20200309/refine2"
+#osg roam only need a few of view points which is different from others
+TrajectoryFile: "D:/data/Estonia/roam/20200309/Estonia.traj"

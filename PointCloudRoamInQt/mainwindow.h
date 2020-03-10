@@ -6,6 +6,7 @@
 #include "PointCloudRoamLibs.h"
 #include "mygraphicwindowqt.h"
 #include "Util.h"
+#include <glog/logging.h>
 #include "PointCloudIO.h"
 
 class MainWindow : public QWidget {
@@ -14,7 +15,7 @@ class MainWindow : public QWidget {
 public:
     MainWindow();
     ~MainWindow(){
-        int iii=0;
+		google::ShutdownGoogleLogging ();
         killTimer(_timerID);
     }
 
@@ -50,7 +51,7 @@ public:
 		_viewerrefine->setCameraManipulator (manipulatorrefine, resetPositionrefine);
 	}
 
-	void loadTraj (const std::string& traj_file,
+	bool loadTraj (const std::string& traj_file,
 		const osg::ref_ptr<osg::AnimationPath>& animation_path,
 		const osg::Vec3d& offset);
 

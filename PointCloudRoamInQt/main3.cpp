@@ -1,7 +1,10 @@
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 #include <windows.h>
 #include <iostream>
 #include <pcl/kdtree/kdtree_flann.h>
+#include <glog/logging.h>
 #include <osg/Point>
 #include <osgViewer/Viewer>
 #include <osgViewer/CompositeViewer>
@@ -23,7 +26,6 @@
 #include "Util.h"
 #include "PointCloudIO.h"
 
-
 using namespace std;
 
 struct Point3I
@@ -39,7 +41,7 @@ struct Point3I
 float computeRunTime (osg::Vec3 start, osg::Vec3 end);
 
 //load trajectory
-void loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path, const osg::Vec3d& offset);
+bool loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path, const osg::Vec3d& offset);
 
 //load point cloud
 osg::ref_ptr<osg::Geode> loadPointCloud (const std::string& file_name, osg::Vec3d& offset);
@@ -303,23 +305,35 @@ int main3 (int argc, char **argv)
 	comptviewer->realize ();
 
 	comptviewer->run ();
-
+	google::ShutdownGoogleLogging ();
 	return 0;
 }
 
-void loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path,
+bool loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPath>& animation_path,
 	const osg::Vec3d& offset)
 {
 	//load trajectory file
 	osg::ref_ptr<osg::Vec3Array> route_pts = new osg::Vec3Array ();
 	std::ifstream ifs;
 	ifs.open (traj_file);
+	if ( ifs )
+	{
+		LOG ( ERROR ) << "The traj file open fails, Please check it. " << traj_file;
+		return false;
+	}
 	int num_pts;
 	ifs >> num_pts;
 	while (!ifs.eof ())
 	{
 		double x, y, z;
 		ifs >> x >> y >> z;
+
+		if ( typeid( y ) != typeid( double ) || typeid( x ) != typeid( double ) || typeid( z ) != typeid( double ) || !ifs )
+		{
+			LOG ( ERROR ) << "The traj file format is incorrect. Please check it" << std::endl;
+			return false;
+		}
+
 		route_pts->push_back (osg::Vec3d (x, y, z));
 	}
 	ifs.close ();
@@ -351,6 +365,7 @@ void loadTraj (const std::string& traj_file, const osg::ref_ptr<osg::AnimationPa
 		animation_path->insert (time, osg::AnimationPath::ControlPoint (pos - offset, rotation));
 		time += computeRunTime (pos, *iter);
 	}
+	return true;
 }
 
 float computeRunTime (osg::Vec3 start, osg::Vec3 end)
