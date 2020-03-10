@@ -15,7 +15,7 @@
  *   Jeremy Moles  <jeremy@emperorlinux.com>
  *   Cedric Pinson <mornifle@plopbyte.net>
 */
-
+#include <Windows.h>
 #include <iostream>
 #include <osg/io_utils>
 #include <osg/Geometry>
@@ -311,7 +311,7 @@ osg::MatrixTransform* setupAnimtkNode (osg::Geode* staticGeode)
 	return node;
 }
 
-int main (int argc, char** argv)
+int main5 (int argc, char** argv)
 {
 	osg::ArgumentParser arguments (&argc, argv);
 	osgViewer::Viewer viewer (arguments);
