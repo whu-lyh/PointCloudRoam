@@ -67,12 +67,21 @@ public:
 		float start_time, 
 		float end_time);
 
+	inline std::string getViewPortDirection () { return _viewportdirection; }
+	inline void setViewPortDirection ( std::string direction ) { _viewportdirection = direction; }
+
+	inline float getRoamSpeed () { return _roamspeed; }
+	inline void setRoamSpeed ( float speed ) { _roamspeed = speed; }
+
 private:
 	osgViewer::Viewer *_viewer, *_viewerrefine, *_viewerorigin;
 	osgViewer::CompositeViewer *_comViewer;
     int               _timerID;
     MyGraphicWindowQt* _graphicsWindoworigin;
 	MyGraphicWindowQt* _graphicsWindowrefine;
+
+	std::string _viewportdirection;
+	float _roamspeed = 0.25;
 
 signals:
 	void waitASecound ();

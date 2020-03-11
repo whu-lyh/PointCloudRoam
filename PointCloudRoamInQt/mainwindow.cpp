@@ -1,5 +1,6 @@
 ﻿#include "mainwindow.h"
 #include <QTimer>
+#include <QApplication>
 
 MainWindow::MainWindow()
 {
@@ -173,7 +174,28 @@ bool MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 
 	float time = 0.f;
 	float angle = 0.f;  //初始方向为Y轴正向（绕X轴旋转90°之后），之后就沿着z轴转
-	float heading = M_PI_2;  //绕x轴旋转90度
+	float heading; //roam direction
+	std::string direction = this->getViewPortDirection ();
+	if ( direction == "y" || direction == "Y" )
+		heading = M_PI_2;  //绕x轴旋转90度, in anticlokcwise direction which is equal to y positive axis direction
+	else if ( direction == "-z" || direction == "-Z" )
+		heading = 0;  //绕x轴旋转90度, in anticlokcwise direction which is equal to y positive axis direction
+	else if (direction == "y-down-45")
+	{
+		heading = M_PI_4;
+	}
+	else {
+		//default direction
+		heading = M_PI_2;  //绕x轴旋转90度, in anticlokcwise direction which is equal to y positive axis direction
+		LOG ( INFO ) << "Using default direction along y axis";
+	}
+
+	/*
+	The osg coordinate definition as left-hand coordinate which is right-front-up(x-y-z) and 
+	the OpenGL coordinate definition also as left-hand coordinate which is right-up-behind(x-y-z), z axis is pointer to outside the screen
+	The default viewport is along down direction, so heading is rotate to be equal to  the y positive direction, rotate axis is x axis 
+	*/
+
 	//The following should know the osg's coordinate's difinition
 	for (auto iter = route_pts->begin (), end = route_pts->end (); iter + 1 != end;)
 	{
@@ -196,9 +218,12 @@ bool MainWindow::loadTraj (const std::string& traj_file, const osg::ref_ptr<osg:
 
 		//here i need to learn more about quaternions to handle the rotation of the heading change while roamming
 		//one quaternion is a rotation
-		//osg::Quat rotation (osg::Quat (heading, osg::Vec3 (1.f, 0.f, 0.f)) * osg::Quat (-angle, osg::Vec3 (0.f, 0.f, 1.f)));
-			// current direction is opengl's direction so here should change the coordinate to the osg's coordinate
-		osg::Quat rotation (osg::Quat (heading, osg::Vec3 (1.f, 0.f, 0.f)) * osg::Quat (-angle, osg::Vec3 (0.f, 0.f, 1.f)));
+		///***	
+		///Q quaternion * P quaternion means that first conduct a rotation P,Second conduct a rotation Q, means a fusion about two rotations with a multiplication operation
+		///***
+		//current direction is opengl's direction so here should change the coordinate to the osg's coordinate
+		osg::Quat rotation (osg::Quat (heading, osg::Vec3 (1.f, 0.f, 0.f)) * osg::Quat (-angle, osg::Vec3 (0.f, 0.f, 1.f))); //first rotate around z axis(0,0,1) with -angle degree, second rotate around x axis with heading degree
+		//osg::Quat(angle to rotate, rotate around axis);
 		//add each ControlPoint(a.k.a. viewpoint ==> position rotation scale) to the path
 		//position ==> a 3D point osg::Vec3
 		//rotation ==> a quaternion (osg::Quat) to control the view angle (a quaternion for 3d rotation is a multiplation conducted on 4D manifold) see more detail in bilibili
@@ -213,18 +238,36 @@ float MainWindow::computeRunTime (osg::Vec3 start, osg::Vec3 end)
 {
 	float distance = std::sqrtf (std::powf (start.x () - end.x (), 2.f) + std::powf (start.y () - end.y (), 2.f)
 		+ std::powf (start.z () - end.z (), 2.f));
-	float speed_coef = 0.25f;
+	float speed_coef = this->getRoamSpeed(); //larger ==> slower
 	return distance * speed_coef;
 }
 
 osg::ref_ptr<osg::Geode> MainWindow::loadPointCloud (const std::string& file_name, osg::Vec3d& offset)
 {
-	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>> ();
+	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>> ();
 	Point3d las_offset;
-	Util::loadSingleLAS<pcl::PointXYZRGB> (file_name, cloud, las_offset);
+	Util::loadSingleLAS<pcl::PointXYZRGBA> (file_name, cloud, las_offset);
 	offset = osg::Vec3d (las_offset.x, las_offset.y, las_offset.z);
 
 	osg::ref_ptr<osg::Geode> geode = NULL;
+
+	/*Note about color
+	 * The RGBA information is available either as separate r, g, b, or as a
+	* packed uint32_t rgba value. To pack it, use:
+	*
+	* \code
+	* int rgb = ((int)r) << 16 | ((int)g) << 8 | ((int)b);
+	* \endcode
+	*
+	* To unpack it use:
+	*
+	* \code
+	* int rgb = ...;
+	* uint8_t r = (rgb >> 16) & 0x0000ff;
+	* uint8_t g = (rgb >> 8)  & 0x0000ff;
+	* uint8_t b = (rgb)     & 0x0000ff;
+	* \endcode
+	*/
 
 	if (cloud->points.size ())
 	{
@@ -235,7 +278,17 @@ osg::ref_ptr<osg::Geode> MainWindow::loadPointCloud (const std::string& file_nam
 		{
 			coords->push_back (osg::Vec3 (pt.x, pt.y, pt.z));
 			//here note that the color should be between 0 and 1
-			colors->push_back (osg::Vec4 (pt.r / 255.0, pt.g / 255.0, pt.b / 255.0, 1.f));
+			if ( pt.r == 0.0 && pt.g == 0.0 && pt.b == 0.0 && pt.rgba != 0.0 )
+			{
+				pt.r = ( ( (int) pt.rgb ) >> 16 ) & 0x0000ff6;
+				pt.g = ( ( (int) pt.rgb ) >> 8 ) & 0x0000ff6;
+				pt.b = ( (int) pt.rgb ) & 0x0000ff6;
+				colors->push_back ( osg::Vec4 ( pt.r, pt.g, pt.b, 1.f ) );
+			}
+			else
+			{
+				colors->push_back (osg::Vec4 (pt.r / 255.0, pt.g / 255.0, pt.b / 255.0, 1.f));
+			}
 		}
 
 		osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry ();

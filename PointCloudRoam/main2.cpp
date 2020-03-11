@@ -54,12 +54,12 @@
 //	std::string traj_file = "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj";//osg roam only need a few of view points which is different from others
 //
 //	//preprocess point cloud
-//	/*pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud1 = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+//	/*pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud1 = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>>();
 //	Util::Point3d offset;
-//	Util::loadSingleLAS<pcl::PointXYZRGB>(las1_path + "/pc1.las", cloud1, offset);
+//	Util::loadSingleLAS<pcl::PointXYZRGBA>(las1_path + "/pc1.las", cloud1, offset);
 //
 //	std::vector<bool> reserved(cloud1->size(), false);
-//	pcl::KdTreeFLANN<pcl::PointXYZRGB> kdtree;
+//	pcl::KdTreeFLANN<pcl::PointXYZRGBA> kdtree;
 //	std::vector<int> PointIdSearch_cloud;
 //	std::vector<float> PointDistanceSearch_cloud;
 //	kdtree.setInputCloud(cloud1);
@@ -75,7 +75,7 @@
 //	float min_z, max_z;
 //	min_z = std::numeric_limits<float>::max();
 //	max_z = std::numeric_limits<float>::lowest();
-//	pcl::PointCloud<pcl::PointXYZRGB>::Ptr rgb_cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+//	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr rgb_cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>>();
 //	for (int i = 0; i < reserved.size(); ++i)
 //	{
 //	const auto& pt = cloud1->points[i];
@@ -86,7 +86,7 @@
 //	if (pt.z > max_z)
 //	max_z = pt.z;
 //	}
-//	Util::saveLAS<pcl::PointXYZRGB>(las1_path + "/pc1_texture.las", rgb_cloud, offset);
+//	Util::saveLAS<pcl::PointXYZRGBA>(las1_path + "/pc1_texture.las", rgb_cloud, offset);
 //
 //	float delta_z = max_z - min_z;
 //	std::vector<Point3I> endPointColors;
@@ -97,7 +97,7 @@
 //	endPointColors.push_back(Point3I(255, 0, 0));
 //	float sectionLength = delta_z / endPointColors.size();
 //
-//	pcl::PointCloud<pcl::PointXYZRGB>::Ptr hgt_cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+//	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr hgt_cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>>();
 //	for (int i = 0; i < reserved.size(); ++i)
 //	{
 //	auto pt = cloud1->points[i];
@@ -129,7 +129,7 @@
 //	pt.b = color.b;
 //	hgt_cloud->push_back(pt);
 //	}
-//	Util::saveLAS<pcl::PointXYZRGB>(las1_path + "/pc1_height.las", hgt_cloud, offset);
+//	Util::saveLAS<pcl::PointXYZRGBA>(las1_path + "/pc1_height.las", hgt_cloud, offset);
 //	return 0;*/
 //
 //	//get all point cloud file and return a list of point cloud file dir+name+ext
@@ -249,9 +249,9 @@
 //
 //osg::ref_ptr<osg::Geode> loadPointCloud(const std::string& file_name, osg::Vec3d& offset)
 //{
-//	pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGB>>();
+//	pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud = boost::make_shared<pcl::PointCloud<pcl::PointXYZRGBA>>();
 //	Point3d las_offset;
-//	Util::loadSingleLAS<pcl::PointXYZRGB>(file_name, cloud, las_offset);
+//	Util::loadSingleLAS<pcl::PointXYZRGBA>(file_name, cloud, las_offset);
 //	offset = osg::Vec3d(las_offset.x, las_offset.y, las_offset.z);
 //
 //	osg::ref_ptr<osg::Geode> geode = NULL;

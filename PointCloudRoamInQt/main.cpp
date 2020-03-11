@@ -21,9 +21,16 @@ struct DataInfo
 	std::string traj_file;
 };
 
+struct RoamInfo
+{
+	std::string  viewportdirection;
+	float speed;
+};
+
 struct ConfigParameter
 {
 	DataInfo dataInfo;
+	RoamInfo roaminfo;
 };
 
 //param setting
@@ -48,23 +55,20 @@ int main(int argc, char** argv)
 
 	// The qt window
 	MainWindow widget;
-
-	 //define the path of point cloud and trajectory
-	std::string pointfilepathorigin = Util::Config::get<std::string> ( "PointFilepathOrigin" );
-	std::string pointfilepathrefine = Util::Config::get<std::string> ( "PointFilepathRefine" );
-	std::string traj_file = Util::Config::get<std::string> ( "TrajectoryFile" );
+	widget.setViewPortDirection ( config_param.roaminfo.viewportdirection );
+	widget.setRoamSpeed ( config_param.roaminfo.speed );
 
 	//make sure that the dictories are exist
-	if (Util::file_exist(pointfilepathorigin)&& Util::file_exist(pointfilepathrefine))
+	if (Util::file_exist( config_param.dataInfo.pointfilepathorigin )&& Util::file_exist( config_param.dataInfo.pointfilepathrefine))
 	{
-		Util::ensure_dir (pointfilepathorigin);
-		Util::ensure_dir (pointfilepathrefine);
+		Util::ensure_dir ( config_param.dataInfo.pointfilepathorigin );
+		Util::ensure_dir ( config_param.dataInfo.pointfilepathrefine );
 	}
 
 	//get all point cloud file and return a list of point cloud file dir+name+ext
 	std::vector<std::string> v_pointnamelistorigin, v_pointnamelistrefine;
-	Util::get_files (pointfilepathorigin, ".las", v_pointnamelistorigin);
-	Util::get_files (pointfilepathrefine, ".las", v_pointnamelistrefine);
+	Util::get_files ( config_param.dataInfo.pointfilepathorigin, ".las", v_pointnamelistorigin);
+	Util::get_files ( config_param.dataInfo.pointfilepathrefine, ".las", v_pointnamelistrefine);
 	if (v_pointnamelistorigin.size () == 0 || v_pointnamelistrefine.size () == 0)
 	{
 		LOG ( ERROR ) << "please check the directory of the input data" << std::endl;
@@ -142,7 +146,7 @@ int main(int argc, char** argv)
 	osg::ref_ptr<osgGA::AnimationPathManipulator> animation_path_manipulator = new osgGA::AnimationPathManipulator ();
 	osg::ref_ptr<osg::AnimationPath> animation_path = new osg::AnimationPath ();
 	animation_path->setLoopMode (osg::AnimationPath::LOOP);
-	if ( ! widget.loadTraj ( traj_file, animation_path, osg::Vec3d () ) )//middle point will interplated
+	if ( ! widget.loadTraj ( config_param.dataInfo.traj_file, animation_path, osg::Vec3d () ) )//middle point will interplated
 	{
 		LOG ( ERROR ) << "The traj file fails to be loaded";
 		return 0;
@@ -167,21 +171,22 @@ int main(int argc, char** argv)
 
 void parametersSetting ( ConfigParameter& config_param )
 {
-	//Data info
-	std::string str1 = Util::Config::get<std::string> ( "PointFilepathOrigin" );
-	std::string str2 = Util::Config::get<std::string> ( "PointFilepathRefine" );
-	std::string strTraj = Util::Config::get<std::string> ( "TrajectoryFile" );
-
-	//point cloud directories
+	//Data info point cloud directories
 	config_param.dataInfo.pointfilepathorigin = Util::Config::get<std::string> ( "PointFilepathOrigin" );
 	config_param.dataInfo.pointfilepathrefine = Util::Config::get<std::string> ( "PointFilepathRefine" );
-	config_param.dataInfo.pointfilepathrefine = Util::Config::get<std::string> ( "TrajectoryFile" );
+	config_param.dataInfo.traj_file = Util::Config::get<std::string> ( "TrajectoryFile" );
+
+	config_param.roaminfo.viewportdirection = Util::Config::get<std::string> ( "ViewportDirection" );
+	config_param.roaminfo.speed = Util::Config::get<float> ( "RoamSpeed" );
 
 	//print params
 	LOG ( INFO ) << "------------------------------Parameters------------------------------" << std::endl;
 	LOG ( INFO ) << "#Data info" ;
-	LOG ( INFO ) << "PointFilepathOrigin: " << str1 ;
-	LOG ( INFO ) << "PointFilepathRefine: " << str2 ;
-	LOG ( INFO ) << "Trajectory File: " << str2 ;
+	LOG ( INFO ) << "PointFilepath Origin: " << config_param.dataInfo.pointfilepathorigin;
+	LOG ( INFO ) << "PointFilepath Refine: " << config_param.dataInfo.pointfilepathrefine;
+	LOG ( INFO ) << "Trajectory File: " << config_param.dataInfo.traj_file;
+	LOG ( INFO ) << "#Roam info";
+	LOG ( INFO ) << "Roam Direction: " << config_param.roaminfo.viewportdirection;
+	LOG ( INFO ) << "Roam Speed: " << config_param.roaminfo.speed;
 	LOG ( INFO ) << std::endl;
 }
