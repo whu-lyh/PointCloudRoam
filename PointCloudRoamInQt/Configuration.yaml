@@ -1,19 +1,36 @@
 %YAML:1.0
 
+#Roam view Info
+
+#The osg coordinate definition as left-hand coordinate which is right-front-up(x-y-z) and 
+#the OpenGL coordinate definition also as left-hand coordinate which is right-up-behind(x-y-z), z axis is pointer to outside the screen
+#Initial viewport is along down direction, so heading is rotate to along the y positive direction, rotate axis is x axis 
+
+#y point to the trajectory direction, -z point to down view, y-down-45 point to y axis and 45 degree
+ViewportDirection: "y-down-45"
+#speed is  //larger ==> slower
+RoamSpeed: 0.5
+
 #Data info
 ##dataset wuhan GI
 #PointFilepathOrigin: "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN"
 #PointFilepathRefine: "F:/shanghai/Lu-block-data/All-in-lu/REFINE"
 #TrajectoryFile: "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj"
 
-#dataset wuhan GI
+#dataset shanghai
 #PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
 #PointFilepathRefine: "F:/Data/Zhangjiang8Block/outPC/refine"
 #osg roam only need a few of view points which is different from others
 #TrajectoryFile: "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj"
 
-#dataset Estonia
-PointFilepathOrigin: "D:/data/Estonia/roam/20200309/origin2"
-PointFilepathRefine: "D:/data/Estonia/roam/20200309/refine2"
+#dataset shanghai alienware
+#PointFilepathOrigin: "D:/data/shanghai/1km2/roam/origin"
+#PointFilepathRefine: "D:/data/shanghai/1km2/roam/refine"
 #osg roam only need a few of view points which is different from others
-TrajectoryFile: "D:/data/Estonia/roam/20200309/Estonia.traj"
+#TrajectoryFile: "D:/data/shanghai/1km2/roam/1km2.traj"
+
+#dataset Estonia
+PointFilepathOrigin: "D:/data/Estonia/roam/20200309/origin"
+PointFilepathRefine: "D:/data/Estonia/roam/20200309/refine"
+#osg roam only need a few of view points which is different from others
+TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display.traj"
