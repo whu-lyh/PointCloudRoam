@@ -82,7 +82,10 @@ MainWindow::MainWindow()
 
 	osg::ref_ptr<osg::Camera> cameraorigin = _viewerorigin->getCamera ();
 	cameraorigin->setGraphicsContext (_graphicsWindoworigin);
-	//cameraorigin->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);   //若zfar设成1000，打开大的数据会有问题
+	if ( this->getPerspectiveProjectStatus () )
+	{
+		cameraorigin->setProjectionMatrixAsPerspective ( 60., 192.0 / 108, .1, 1000. );   //若zfar设成1000，打开大的数据会有问题
+	}
 	cameraorigin->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	cameraorigin->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	cameraorigin->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
@@ -92,7 +95,10 @@ MainWindow::MainWindow()
 
 	osg::ref_ptr<osg::Camera> camerarefine = _viewerrefine->getCamera ();
 	camerarefine->setGraphicsContext (_graphicsWindowrefine);
-	//camerarefine->setProjectionMatrixAsPerspective (60., 192.0 / 108, .1, 1000.);//如果采用这种透视投影的方式将会使得视角中的物体近处比较稀疏
+	if (this->getPerspectiveProjectStatus())
+	{
+		camerarefine->setProjectionMatrixAsPerspective ( 60., 192.0 / 108, .1, 1000. );//如果采用这种透视投影的方式将会使得视角中的物体近处比较稀疏
+	}
 	camerarefine->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	camerarefine->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	camerarefine->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));

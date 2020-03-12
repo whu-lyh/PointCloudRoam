@@ -73,6 +73,9 @@ public:
 	inline float getRoamSpeed () { return _roamspeed; }
 	inline void setRoamSpeed ( float speed ) { _roamspeed = speed; }
 
+	inline float getPerspectiveProjectStatus () { return _perspective; }
+	inline void setPerspectiveProjectStatus ( float openperspective ) { _perspective = openperspective; }
+
 private:
 	osgViewer::Viewer *_viewer, *_viewerrefine, *_viewerorigin;
 	osgViewer::CompositeViewer *_comViewer;
@@ -82,6 +85,7 @@ private:
 
 	std::string _viewportdirection;
 	float _roamspeed = 0.25;
+	float _perspective = 0.f;
 
 signals:
 	void waitASecound ();

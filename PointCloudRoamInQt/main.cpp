@@ -25,6 +25,7 @@ struct RoamInfo
 {
 	std::string  viewportdirection;
 	float speed;
+	bool doperspective;
 };
 
 struct ConfigParameter
@@ -57,6 +58,7 @@ int main(int argc, char** argv)
 	MainWindow widget;
 	widget.setViewPortDirection ( config_param.roaminfo.viewportdirection );
 	widget.setRoamSpeed ( config_param.roaminfo.speed );
+	widget.setPerspectiveProjectStatus ( config_param.roaminfo.doperspective );
 
 	//make sure that the dictories are exist
 	if (Util::file_exist( config_param.dataInfo.pointfilepathorigin )&& Util::file_exist( config_param.dataInfo.pointfilepathrefine))
@@ -178,6 +180,7 @@ void parametersSetting ( ConfigParameter& config_param )
 
 	config_param.roaminfo.viewportdirection = Util::Config::get<std::string> ( "ViewportDirection" );
 	config_param.roaminfo.speed = Util::Config::get<float> ( "RoamSpeed" );
+	config_param.roaminfo.doperspective = Util::Config::get<float> ( "OpenPerspective" );
 
 	//print params
 	LOG ( INFO ) << "------------------------------Parameters------------------------------" << std::endl;
@@ -188,5 +191,6 @@ void parametersSetting ( ConfigParameter& config_param )
 	LOG ( INFO ) << "#Roam info";
 	LOG ( INFO ) << "Roam Direction: " << config_param.roaminfo.viewportdirection;
 	LOG ( INFO ) << "Roam Speed: " << config_param.roaminfo.speed;
+	LOG ( INFO ) << "Open perspective projection: " << config_param.roaminfo.doperspective;
 	LOG ( INFO ) << std::endl;
 }
