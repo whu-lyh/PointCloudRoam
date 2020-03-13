@@ -5,6 +5,7 @@
 
 #include "PointCloudRoamLibs.h"
 #include "mygraphicwindowqt.h"
+#include "shapewindow.h"
 #include "Util.h"
 #include <glog/logging.h>
 #include "PointCloudIO.h"
@@ -76,6 +77,12 @@ public:
 	inline float getPerspectiveProjectStatus () { return _perspective; }
 	inline void setPerspectiveProjectStatus ( float openperspective ) { _perspective = openperspective; }
 
+	inline bool getShapeStatus () { return ( ( _openShapeWindow == "true" ) || ( _openShapeWindow == "TRUE" ) || ( _openShapeWindow == "True" ) ) ? true : false; }
+	inline void setShapeStatus ( std::string openshape ) { _openShapeWindow = openshape; }
+
+	inline void setShapeFilepath ( std::string path ) { _shapeFilepath = path; }
+	inline std::string getShapeFilepath () { return _shapeFilepath; }
+
 private:
 	osgViewer::Viewer *_viewer, *_viewerrefine, *_viewerorigin;
 	osgViewer::CompositeViewer *_comViewer;
@@ -87,11 +94,17 @@ private:
 	float _roamspeed = 0.25;
 	float _perspective = 0.f;
 
+	std::string _openShapeWindow;
+	std::string _shapeFilepath;
+	ShapeWindow *_shapewindow;
+
 signals:
 	void waitASecound ();
+	void activateShapewindow ();
 
 public slots:
     void onStartTimer();
+	void showshape ();
 };
 
 #endif // MAINWINDOW_H

@@ -1,4 +1,5 @@
 ﻿#include "mainwindow.h"
+#include "shapewindow.h"
 #include <QTimer>
 #include <QApplication>
 
@@ -53,6 +54,7 @@ MainWindow::MainWindow()
 	this->setLayout (grid);
 
 	this->setWindowTitle (tr("Point Cloud Roamming"));
+	connect ( this, SIGNAL ( activateShapewindow () ), this, SLOT ( showshape () ) );
 
 	////initialize two viewer and all point will be added as a child
 	_comViewer = new osgViewer::CompositeViewer ();
@@ -83,15 +85,15 @@ MainWindow::MainWindow()
 	osg::ref_ptr<osg::Camera> cameraorigin = _viewerorigin->getCamera ();
 	cameraorigin->setGraphicsContext (_graphicsWindoworigin);
 	if ( this->getPerspectiveProjectStatus () )
-	{
+	{//explore more projection mode
 		cameraorigin->setProjectionMatrixAsPerspective ( 60., 192.0 / 108, .1, 1000. );   //若zfar设成1000，打开大的数据会有问题
 	}
 	cameraorigin->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	cameraorigin->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	cameraorigin->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
-	GLenum buffer = traits1->doubleBuffer ? GL_BACK : GL_FRONT;
-	cameraorigin->setDrawBuffer (buffer);
-	cameraorigin->setReadBuffer (buffer);
+	GLenum bufferorigin = traits1->doubleBuffer ? GL_BACK : GL_FRONT;
+	cameraorigin->setDrawBuffer ( bufferorigin );
+	cameraorigin->setReadBuffer ( bufferorigin );
 
 	osg::ref_ptr<osg::Camera> camerarefine = _viewerrefine->getCamera ();
 	camerarefine->setGraphicsContext (_graphicsWindowrefine);
@@ -102,6 +104,9 @@ MainWindow::MainWindow()
 	camerarefine->setViewport (new osg::Viewport (0, 0, width (), height ()));
 	camerarefine->setClearMask (GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	camerarefine->setClearColor (osg::Vec4 (1.f, 1.f, 1.f, 0));
+	GLenum bufferrefine = traits2->doubleBuffer ? GL_BACK : GL_FRONT;
+	camerarefine->setDrawBuffer ( bufferrefine );
+	camerarefine->setReadBuffer ( bufferrefine );
 
 	//there are still many things that i don't know the usage and function
 	// add the state manipulator
@@ -346,4 +351,36 @@ osg::ref_ptr<osg::AnimationPath> MainWindow::creatAnimationPath2 (const osg::Vec
 
 	//返回Path
 	return animationPath;
+}
+
+void MainWindow::showshape ()
+{
+	_shapewindow = new ShapeWindow ();
+
+	//create a group to contains all SceneData
+	osg::ref_ptr<osg::Group> rootreshape = new osg::Group ();
+	{
+		osg::ref_ptr<osg::Node> nodeshape = osgDB::readNodeFile ( this->getShapeFilepath () );  //this registry using the osg plugin osgdb_shp.dll in PATH
+		//for modefining some attribute of the point or line
+		//root->getOrCreateStateSet()->setAttribute(new osg::Point(1.f), osg::StateAttribute::ON);
+		osg::StateSet* ssshape = rootreshape->getOrCreateStateSet ();
+		//set point's size
+		//osg::ref_ptr<osg::Point> pointrefine = new osg::Point ();
+		//pointrefine->setSize ( 20.0 );//didn't work
+		//ssshape->setAttribute ( pointrefine );
+		osg::Light *lightshape = new osg::Light;
+		lightshape->setAmbient ( osg::Vec4 ( 0.5f, 0.5f, 0.5f, .25f ) );
+		ssshape->setAttribute ( lightshape, osg::StateAttribute::ON );
+		ssshape->setMode ( GL_BLEND, osg::StateAttribute::ON );
+		ssshape->setRenderingHint ( osg::StateSet::TRANSPARENT_BIN );
+
+		rootreshape->addChild ( nodeshape );
+
+		osgUtil::Optimizer optimizershape;
+		optimizershape.optimize ( rootreshape.get () );
+	}
+
+	_shapewindow->setShapeSceneData ( rootreshape.get () );
+	_shapewindow->setShapeCameraManipulator ( new osgGA::TrackballManipulator );
+	_shapewindow->show ();
 }

@@ -12,6 +12,7 @@ and exploit the yaml file to locate the point cloud and trajectory file
 #include <QApplication>
 
 #include "mainwindow.h"
+#include "shapewindow.h"
 #include "Config.h"
 
 struct DataInfo
@@ -25,13 +26,20 @@ struct RoamInfo
 {
 	std::string  viewportdirection;
 	float speed;
-	bool doperspective;
+	float doperspective;
+};
+
+struct ShapeInfo
+{
+	std::string doshowshape;
+	std::string shapefilepath;
 };
 
 struct ConfigParameter
 {
 	DataInfo dataInfo;
 	RoamInfo roaminfo;
+	ShapeInfo shapeinfo;
 };
 
 //param setting
@@ -59,6 +67,13 @@ int main(int argc, char** argv)
 	widget.setViewPortDirection ( config_param.roaminfo.viewportdirection );
 	widget.setRoamSpeed ( config_param.roaminfo.speed );
 	widget.setPerspectiveProjectStatus ( config_param.roaminfo.doperspective );
+	//Shape window
+	widget.setShapeStatus ( config_param.shapeinfo.doshowshape );
+	if (widget.getShapeStatus())
+	{
+		widget.setShapeFilepath ( config_param.shapeinfo.shapefilepath );
+		emit widget.activateShapewindow ();
+	}
 
 	//make sure that the dictories are exist
 	if (Util::file_exist( config_param.dataInfo.pointfilepathorigin )&& Util::file_exist( config_param.dataInfo.pointfilepathrefine))
@@ -178,9 +193,14 @@ void parametersSetting ( ConfigParameter& config_param )
 	config_param.dataInfo.pointfilepathrefine = Util::Config::get<std::string> ( "PointFilepathRefine" );
 	config_param.dataInfo.traj_file = Util::Config::get<std::string> ( "TrajectoryFile" );
 
+	//Roam info parameters
 	config_param.roaminfo.viewportdirection = Util::Config::get<std::string> ( "ViewportDirection" );
 	config_param.roaminfo.speed = Util::Config::get<float> ( "RoamSpeed" );
 	config_param.roaminfo.doperspective = Util::Config::get<float> ( "OpenPerspective" );
+
+	//Shape inro
+	config_param.shapeinfo.doshowshape = Util::Config::get<std::string> ( "OpenShpWindow" );
+	config_param.shapeinfo.shapefilepath = Util::Config::get<std::string> ( "ShapeFilepath" );
 
 	//print params
 	LOG ( INFO ) << "------------------------------Parameters------------------------------" << std::endl;
@@ -192,5 +212,8 @@ void parametersSetting ( ConfigParameter& config_param )
 	LOG ( INFO ) << "Roam Direction: " << config_param.roaminfo.viewportdirection;
 	LOG ( INFO ) << "Roam Speed: " << config_param.roaminfo.speed;
 	LOG ( INFO ) << "Open perspective projection: " << config_param.roaminfo.doperspective;
+	LOG ( INFO ) << "#Shape info";
+	LOG ( INFO ) << "Show shape file: " << config_param.shapeinfo.doshowshape;
+	LOG ( INFO ) << "ShapeFilepath: " << config_param.shapeinfo.shapefilepath;
 	LOG ( INFO ) << std::endl;
 }
