@@ -1,16 +1,4 @@
 %YAML:1.0
-
-#Roam view Info
-
-#The osg coordinate definition as left-hand coordinate which is right-front-up(x-y-z) and 
-#the OpenGL coordinate definition also as left-hand coordinate which is right-up-behind(x-y-z), z axis is pointer to outside the screen
-#Initial viewport is along down direction, so heading is rotate to along the y positive direction, rotate axis is x axis 
-
-#y point to the trajectory direction, -z point to down view, y-down-45 point to y axis and 45 degree
-ViewportDirection: "y-down-45"
-#speed is  //larger ==> slower
-RoamSpeed: 0.5
-
 #Data info
 ##dataset wuhan GI
 #PointFilepathOrigin: "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN"
@@ -33,4 +21,21 @@ RoamSpeed: 0.5
 PointFilepathOrigin: "D:/data/Estonia/roam/20200309/origin"
 PointFilepathRefine: "D:/data/Estonia/roam/20200309/refine"
 #osg roam only need a few of view points which is different from others
-TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display.traj"
+TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display-down-perspective.traj"
+#TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display.traj"
+
+#Roam view Info
+
+#The osg coordinate definition as left-hand coordinate which is right-front-up(x-y-z) and 
+#the OpenGL coordinate definition also as left-hand coordinate which is right-up-behind(x-y-z), z axis is pointer to outside the screen
+#Initial viewport is along down direction, so heading is rotate to along the y positive direction, rotate axis is x axis 
+
+#y point to the trajectory direction, -z point to down view, y-down-45 point to y axis and 45 degree
+ViewportDirection: "-z"
+#speed is  //larger ==> slower
+RoamSpeed: 0.5
+OpenPerspective: 1
+
+#Shape Info
+OpenShpWindow: "true"
+ShapeFilepath: "D:/data/Estonia/roam/20200309/20200312Display/traj_block_shps_0/Trajectory0.shp"
