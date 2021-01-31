@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.779
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PointCloudRoam", "PointCloudRoam\PointCloudRoam.vcxproj", "{9EAD1DA2-2AC0-4CAE-9C38-AB43CBCFF843}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lasdb", "lasdb\lasdb.vcxproj", "{233CC151-D789-4E1C-BB91-475EFC5AB5B5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PointCloudRoamInQt", "PointCloudRoamInQt\PointCloudRoamInQt.vcxproj", "{3330690C-4135-4FC5-86CD-94176F6DD644}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "registrationVisualizeTool", "registrationVisualizeTool\registrationVisualizeTool.vcxproj", "{1742D40C-D931-4F49-BDE8-71B12E6F53A9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "matchResultVisualizeTool", "matchResultVisualizeTool\matchResultVisualizeTool.vcxproj", "{E08BE1EB-B67F-4D90-842A-E0323D11ED17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,22 @@ Global
 		{3330690C-4135-4FC5-86CD-94176F6DD644}.Release|x64.Build.0 = Release|x64
 		{3330690C-4135-4FC5-86CD-94176F6DD644}.Release|x86.ActiveCfg = Release|Win32
 		{3330690C-4135-4FC5-86CD-94176F6DD644}.Release|x86.Build.0 = Release|Win32
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Debug|x64.ActiveCfg = Debug|x64
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Debug|x64.Build.0 = Debug|x64
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Debug|x86.ActiveCfg = Debug|Win32
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Debug|x86.Build.0 = Debug|Win32
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Release|x64.ActiveCfg = Release|x64
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Release|x64.Build.0 = Release|x64
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Release|x86.ActiveCfg = Release|Win32
+		{1742D40C-D931-4F49-BDE8-71B12E6F53A9}.Release|x86.Build.0 = Release|Win32
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Debug|x64.ActiveCfg = Debug|x64
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Debug|x64.Build.0 = Debug|x64
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Debug|x86.ActiveCfg = Debug|Win32
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Debug|x86.Build.0 = Debug|Win32
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Release|x64.ActiveCfg = Release|x64
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Release|x64.Build.0 = Release|x64
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Release|x86.ActiveCfg = Release|Win32
+		{E08BE1EB-B67F-4D90-842A-E0323D11ED17}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
