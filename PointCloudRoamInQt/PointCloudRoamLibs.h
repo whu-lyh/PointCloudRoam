@@ -3,11 +3,12 @@
 #ifndef POINTCLOUDROAMLIB_H
 #define POINTCLOUDROAMLIB_H
 /*
-this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
+this lib files is used for qt5	osg3.4+ glog  liblas1.8.1 json pcl-1.8.1
 */
 
 #pragma warning(disable: 4273)
 #pragma warning(disable: 4819)
+#pragma warning(disable: 4138)
 
 #include <iostream>
 
@@ -72,12 +73,13 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #pragma comment(lib, "pcl_kdtree_debug.lib")
 
 #pragma comment(lib, "glogd.lib")
-#pragma comment(lib, "opencv_core347d.lib")
+#pragma comment(lib, "opencv_core340d.lib")
 
-#pragma comment(lib, "Qt5Core.lib")
+#pragma comment(lib, "Qt5Cored.lib")
 #pragma comment(lib, "Qt5Guid.lib")
 #pragma comment(lib, "Qt5Widgetsd.lib")
 #pragma comment(lib, "Qt5OpenGLd.lib")
+#pragma comment(lib, "opengl32.lib")
 
 #else
 #pragma comment(lib, "osg.lib")
@@ -94,7 +96,7 @@ this lib files is used for qt5.13.0	osg3.6.4 liblas pcl-1.8.1
 #pragma comment(lib, "pcl_kdtree_release.lib")
 
 #pragma comment(lib, "glog.lib")
-#pragma comment(lib, "opencv_core347.lib")
+#pragma comment(lib, "opencv_core340.lib")
 
 #pragma comment(lib, "Qt5Core.lib")
 #pragma comment(lib, "Qt5Gui.lib")
