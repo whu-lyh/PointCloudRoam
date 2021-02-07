@@ -14,15 +14,14 @@
 
 #include <glog/logging.h>
 
-#include <opencv2/core/core.hpp>
-
 #include <osgViewer/Viewer>
 #include <osg/ShapeDrawable>
 #include <osg/LineWidth>
 #include <osgDB/WriteFile>
 #include <osgDB/Registry>
 
-#include "../include/Config.h"
+#include <yaml-cpp/yaml.h>
+
 #include "../include/visualizeLibs.h"
 #include "../include/FileUtility.h"
 #include "../include/pointCloudNode.h"
@@ -32,12 +31,6 @@
 namespace VF = VisualTool::FileUtility;
 namespace VP = VisualTool::PointIO;
 namespace VN = VisualTool::Node;
-
-osg::Vec4 toOSGVec4(const cv::Mat &colors_)
-{
-	osg::Vec4 v(colors_.at<float>(0), colors_.at<float>(1), colors_.at<float>(2), 1.0f);
-	return v;
-}
 
 osg::Vec4 toOSGVec4(const std::vector<float> &colors_)
 {
@@ -68,7 +61,7 @@ int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<s
 		return 0;
 	}
 
-	std::string base_path = VF::Config::get<std::string>("MatchResultPath");
+	std::string base_path = VF::GetParent(files[0]);
 	base_path += "/out_node_file";
 	if (!VF::EnsureDir(base_path))
 	{
@@ -89,7 +82,7 @@ int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<s
 }
 
 /*
-依赖库尽可能少：pcl，boost，osg，glog，opencv
+依赖库尽可能少：pcl，boost，osg，glog，yaml-cpp
 功能：可以读取多个las文件和匹配结果文件，通过osg显示两部分点云，并用直线表示匹配关系，可以通过键盘来调整显示的是那个哪个匹配关系
 并通过osg上的界面来显示匹配对数量，匹配文件名字
 */
@@ -115,7 +108,8 @@ int main(int argc, char** argv)
 
 	// ger configuration parameter file
 	std::string config_file = argv [1];
-	if (!VF::Config::setParameterFile(config_file))
+	YAML::Node config = YAML::LoadFile(config_file);
+	if (!config.IsDefined())
 	{
 		LOG(ERROR) << "The configuration file is not existed! plz check it." << std::endl;
 		google::FlushLogFiles(google::GLOG_ERROR);
@@ -123,7 +117,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	std::string las_patch1_path = VF::Config::get<std::string>("PointCloudPatch1");
+	std::string las_patch1_path = config["PointCloudPatch1"].as<std::string>();
 	std::vector<std::string> las_patch1_files;
 	VF::GetFiles(las_patch1_path, ".las", las_patch1_files);
 	int n_patch1 = (int)las_patch1_files.size();
@@ -132,7 +126,7 @@ int main(int argc, char** argv)
 	VisualTool::Point3d offset_src;
 
 	// color setting
-	std::vector<float> color_vec = VF::Config::get<std::vector<float>>("ColorPatch1");
+	std::vector<float> color_vec = config["ColorPatch1"].as<std::vector<float>>();
 	osg::Vec4 color_src = toOSGVec4(color_vec);
 	
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_src(n_patch1);
@@ -148,7 +142,7 @@ int main(int argc, char** argv)
 	// get average offset of patch1
 	offset_src /= n_patch1;
 
-	std::string las_patch2_path = VF::Config::get<std::string>("PointCloudPatch2");
+	std::string las_patch2_path = config["PointCloudPatch2"].as<std::string>();
 	std::vector<std::string> las_patch2_files;
 	VF::GetFiles(las_patch2_path, ".las", las_patch2_files);
 	int n_patch2 = (int)las_patch2_files.size();
@@ -157,7 +151,7 @@ int main(int argc, char** argv)
 	VisualTool::Point3d offset_tar;
 
 	// color setting
-	color_vec = VF::Config::get<std::vector<float>>("ColorPatch2");
+	color_vec = config["ColorPatch2"].as<std::vector<float>>();
 	osg::Vec4 color_tar = toOSGVec4(color_vec);
 
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_tar(n_patch2);
@@ -173,10 +167,10 @@ int main(int argc, char** argv)
 	// get average offset of patch2
 	offset_tar /= n_patch2;
 
-	float pt_size = VF::Config::get<float>("PointSize");
-	float line_width = VF::Config::get<float>("PointSize");
+	float pt_size = config["PointSize"].as<float>();
+	float line_width = config["LineWidth"].as<float>();
 
-	std::string base_path = VF::Config::get<std::string>("MatchResultPath");
+	std::string base_path = config["MatchResultPath"].as<std::string>();
 	std::vector<std::string> match_files;
 	VF::GetFiles(base_path, ".mrf", match_files);
 	int n_match = (int)match_files.size();
@@ -203,7 +197,7 @@ int main(int argc, char** argv)
 	}
 
 	// check whether to save nodes
-	if (std::stoi(VF::Config::get<std::string>("SaveNodes")) == 1)
+	if (std::stoi(config["SaveNodes"].as<std::string>()) == 1)
 	{
 		std::thread saveNode_thread(saveNodes, std::ref(nodeptr_vec_src), std::ref(las_patch1_files));
 	}
@@ -217,7 +211,7 @@ int main(int argc, char** argv)
 	}
 
 	unsigned int win_width = 0, win_height = 0;
-	std::vector<int> winsize_vec = VF::Config::get<std::vector<int>>("WindowSize");
+	std::vector<int> winsize_vec = config["WindowSize"].as<std::vector<int>>();
 	if (winsize_vec.empty())
 	{
 		LOG(WARNING) << "No window size is set!, the osg window will be set as default size of 1920x1080";

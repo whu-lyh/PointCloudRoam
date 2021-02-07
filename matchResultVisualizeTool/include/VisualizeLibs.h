@@ -35,8 +35,6 @@
 
 #pragma comment(lib, "yaml-cppd.lib")
 
-#pragma comment(lib, "opencv_core340d.lib")
-
 #pragma comment(lib, "pcl_common_debug.lib")
 #pragma comment(lib, "pcl_kdtree_debug.lib")
 #else
@@ -52,8 +50,6 @@
 #pragma comment(lib, "glog.lib")
 
 #pragma comment(lib, "yaml-cpp.lib")
-
-#pragma comment(lib, "opencv_core340.lib")
 
 #pragma comment(lib, "pcl_common_release.lib")
 #pragma comment(lib, "pcl_kdtree_release.lib")
