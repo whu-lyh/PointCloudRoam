@@ -275,7 +275,7 @@ namespace VisualTool {
 				return false;
 			}
 
-			std::cout << "Load file: " << filename << std::endl;
+			LOG(INFO) << "Load file: " << filename << std::endl;
 			try
 			{
 				//check extension
@@ -327,7 +327,7 @@ namespace VisualTool {
 						FILE_ATTRIBUTE_NORMAL, NULL);
 					if (INVALID_HANDLE_VALUE == file_handle)
 					{
-						std::cout << "Failed because of err." << std::endl;
+						LOG(ERROR) << "Failed because of err." << std::endl;
 						return false;
 					}
 
@@ -447,7 +447,7 @@ namespace VisualTool {
 				ofs.close();
 			}
 
-			std::cout << "Save file: " << filepath << std::endl;
+			LOG(INFO) << "Save file: " << filepath << std::endl;
 			return true;
 		}
 
@@ -462,7 +462,7 @@ namespace VisualTool {
 
 			if (pcl::io::loadPCDFile(filename, *cloud) != -1)
 			{
-				std::cout << "Load PCD file: '" << filename << "'" << std::endl;
+				LOG(INFO) << "Load PCD file: '" << filename << "'" << std::endl;
 				return true;
 			}
 			return false;
@@ -503,7 +503,7 @@ namespace VisualTool {
 				pcl::io::savePCDFileBinary(filename, out_cloud);
 			}
 
-			std::cout << "Save PCD file: '" << filename << "'" << std::endl;
+			LOG(INFO) << "Save PCD file: '" << filename << "'" << std::endl;
 
 			return true;
 		}
