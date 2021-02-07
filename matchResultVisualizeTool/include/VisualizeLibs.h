@@ -1,3 +1,11 @@
+/*
+	Copyright (c) 2021 WuHan University. All Rights Reserved
+	First create: 2021/02/06
+	Detail: extra dependent libraries
+	Author: yuhao li
+	Email:	yhaoli@whu.edu.cn
+*/
+
 #pragma once
 
 #pragma warning(disable: 4273)
@@ -12,12 +20,6 @@
 
 #include <glog/logging.h>
 
-#include <osgViewer/Viewer>
-#include <osg/ShapeDrawable>
-#include <osg/LineWidth>
-#include <osgDB/WriteFile>
-#include <osgDB/Registry>
-
 #ifdef _DEBUG
 #pragma comment(lib, "OpenThreadsd.lib")
 #pragma comment(lib, "osgd.lib")
@@ -26,9 +28,15 @@
 #pragma comment(lib, "osgViewerd.lib")
 #pragma comment(lib, "osgGAd.lib")
 #pragma comment(lib, "osgTextd.lib")
-#pragma comment(lib, "jsoncpp.lib")
+
 #pragma comment(lib, "liblas.lib")
+
 #pragma comment(lib, "glogd.lib")
+
+#pragma comment(lib, "yaml-cppd.lib")
+
+#pragma comment(lib, "opencv_core340d.lib")
+
 #pragma comment(lib, "pcl_common_debug.lib")
 #pragma comment(lib, "pcl_kdtree_debug.lib")
 #else
@@ -38,9 +46,15 @@
 #pragma comment(lib, "osgViewer.lib")
 #pragma comment(lib, "osgGA.lib")
 #pragma comment(lib, "osgText.lib")
-#pragma comment(lib, "jsoncpp.lib")
+
 #pragma comment(lib, "liblas.lib")
+
 #pragma comment(lib, "glog.lib")
+
+#pragma comment(lib, "yaml-cpp.lib")
+
+#pragma comment(lib, "opencv_core340.lib")
+
 #pragma comment(lib, "pcl_common_release.lib")
 #pragma comment(lib, "pcl_kdtree_release.lib")
 #endif

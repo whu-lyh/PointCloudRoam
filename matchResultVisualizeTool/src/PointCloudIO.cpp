@@ -4,11 +4,12 @@
 #include <iostream>
 
 #include <liblas/liblas.hpp>
+
 #include <boost/version.hpp>
 #include <boost/filesystem.hpp>
 
-#include "PointCloudIO.h"
-#include "PointType.h"
+#include "../include/PointCloudIO.h"
+#include "../include/PointType.h"
 
 namespace VisualTool {
 	using namespace boost;

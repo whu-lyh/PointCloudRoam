@@ -1,8 +1,9 @@
+#pragma once
 
 #include <boost/version.hpp>
 #include <boost/filesystem.hpp>
 
-#include "FileUtility.h"
+#include "../include/FileUtility.h"
 
 namespace VisualTool {
 namespace FileUtility {

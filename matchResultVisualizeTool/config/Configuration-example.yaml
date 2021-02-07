@@ -1,0 +1,32 @@
+%YAML:1
+
+# Data info
+# here, treat the patch1 as src object
+PointCloudPatch1: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/patch1"
+# patch2's color
+ColorPatch1: 
+	r: 1.0
+	g: 0.0
+	b: 1.0
+	a: 1.0 
+# here, treat the patch2 as tar object
+PointCloudPatch2: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/patch2"
+# patch2's color
+ColorPatch2: 
+	r: 0.0
+	g: 1.0
+	b: 0.0
+	a: 1.0 
+
+# match result file path, result is stored in the .txt file
+MatchResultPath: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/match_result_output"
+
+# save data in osg node. 1 for ture, otherwise false
+SaveNodes: 1
+
+# OSG window settings
+WindowSize: [1920,1080]
+
+PointSize: 0.1
+LineWidth: 0.1
+

@@ -2,14 +2,13 @@
 	Copyright (c) 2020 WuHan University. All Rights Reserved
 	First create: 2018/10/04
 	Detail: point type
-	Author:	zouxianghong
+	Author:	xianghong zou
 	Email:	xhzou_whu@foxmail.com
 
 	Modified: 2020/06/13 10:27
 	Detail: add PointXYZRGBINTF type to save all the information in the origin las
-	Author: liyuhao
+	Author: yuhao li
 	Email:	yhaoli@whu.edu.cn
-
 */
 #pragma once
 

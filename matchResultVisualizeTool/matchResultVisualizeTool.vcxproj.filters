@@ -15,25 +15,46 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClInclude Include="include\Config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FileUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PointCloudIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PointType.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VisualizeLibs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pointCloudNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lineNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\FileUtility.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PointCloudIO.cpp">
+    <ClCompile Include="src\PointCloudIO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="FileUtility.cpp">
+    <ClCompile Include="app\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pointCloudNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lineNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="visualizeLibs.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="PointCloudIO.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="FileUtility.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
+    <None Include="config\Configuration-example.yaml" />
   </ItemGroup>
 </Project>
