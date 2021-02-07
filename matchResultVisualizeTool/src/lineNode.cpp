@@ -54,7 +54,6 @@ namespace VisualTool {
 				++num_line;
 				float x1, y1, z1, x2, y2, z2;
 				file >> x1 >> y1 >> z1 >> x2 >> y2 >> z2;
-				LOG(INFO) << x1 << "\t" << y1 << "\t" << z1 << "\t" << x2 << "\t" << y2 << "\t" << z2;
 
 				coords_pt->push_back(osg::Vec3(x1, y1, z1));
 				coords_pt->push_back(osg::Vec3(x2, y2, z2));
