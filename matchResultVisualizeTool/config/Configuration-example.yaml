@@ -7,7 +7,7 @@ PointCloudPatch1: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/patch1"
 ColorPatch1:
     r: 1.0 
     g: 0.0 
-    b: 1.0 
+    b: 0.0 
     a: 1.0  
 # here, treat the patch2 as tar object
 PointCloudPatch2: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/patch2" 
@@ -21,13 +21,14 @@ ColorPatch2: [0.0,1.0,0.0,1.0]
 # match result file path, result is stored in the .mrf file 
 MatchResultPath: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/match_result_output" 
 # save data in osg node. 1 for ture, otherwise false
-SaveNodes: 1 
+SaveNodes: 0 
 
 # OSG window settings
 WindowSize:
     - 1920 # width
     - 1080 # height
 
-PointSize: 0.1
-LineWidth: 0.1
-
+PointSize: 0.5 
+LineWidth: 0.2 
+PointColor: [1.0,1.0,1.0,1.0] 
+LineColor: [0.0,0.0,1.0,1.0]
