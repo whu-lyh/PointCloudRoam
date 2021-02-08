@@ -30,5 +30,5 @@ WindowSize:
 
 PointSize: 0.5 
 LineWidth: 0.2 
-PointColor: [1.0,1.0,1.0,1.0] 
+PointColor: [0.0,0.0,0.0,0.0] #black
 LineColor: [0.0,0.0,1.0,1.0]
