@@ -46,6 +46,12 @@ namespace VisualTool {
 		}
 
 		template<typename PointT>
+		void pointCloudNode<PointT>::setDownSampleInterval(const int gap)
+		{
+			m_intervel = gap;
+		}
+
+		template<typename PointT>
 		osg::ref_ptr<osg::Geode> pointCloudNode<PointT>::getGeoNode()
 		{
 			VisualTool::Point3d offset_tmp;

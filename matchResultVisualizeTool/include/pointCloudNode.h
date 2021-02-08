@@ -30,11 +30,13 @@ namespace VisualTool {
 			osg::ref_ptr<osg::Geode> getGeoNode();
 			VisualTool::Offset getOffset();
 			void setAveOffset(const VisualTool::Offset &off);
+			void setDownSampleInterval(const int gap);
 
 		private:
 			std::string m_sFile_path;
 			constPtr m_PointCloudPtr;
 			VisualTool::Offset m_offset;
+			int m_intervel;
 			osg::ref_ptr<osg::Geode> m_pGeoNode;
 			osg::Vec4 m_v4Color;
 		};
