@@ -28,6 +28,11 @@ namespace VisualTool {
 			m_pGeoNode = new osg::Geode();
 		}
 
+		void lineNode::setAveOffset(const VisualTool::Offset &off)
+		{
+			m_offset = off;
+		}
+
 		osg::ref_ptr<osg::Geode> lineNode::getGeoNode()
 		{
 			if (!VisualTool::FileUtility::FileExist(m_sFile_path))
@@ -54,6 +59,13 @@ namespace VisualTool {
 				++num_line;
 				float x1, y1, z1, x2, y2, z2;
 				file >> x1 >> y1 >> z1 >> x2 >> y2 >> z2;
+
+				x1 = x1 - m_offset.x;
+				y1 = y1 - m_offset.y;
+				z1 = z1 - m_offset.z;
+				x2 = x2 - m_offset.x;
+				y2 = y2 - m_offset.y;
+				z2 = z2 - m_offset.z;
 
 				coords_pt->push_back(osg::Vec3(x1, y1, z1));
 				coords_pt->push_back(osg::Vec3(x2, y2, z2));

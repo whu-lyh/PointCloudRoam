@@ -14,6 +14,8 @@
 #include <osgDB/WriteFile>
 #include <osgDB/Registry>
 
+#include "PointCloudIO.h"
+
 namespace VisualTool {
 	namespace Node {
 		class lineNode
@@ -25,10 +27,12 @@ namespace VisualTool {
 				const osg::Vec4 line_color = osg::Vec4(0.f, 0.f, 1.f, 1.f), const float radius = 0.1f, const float width = 0.1f);
 
 			osg::ref_ptr<osg::Geode> getGeoNode();
+			void setAveOffset(const VisualTool::Offset &off);
 
 		private:
 			std::string m_sFile_path;
 			osg::ref_ptr<osg::Geode> m_pGeoNode;
+			VisualTool::Offset m_offset;
 			osg::Vec4 m_v4ptColor;
 			osg::Vec4 m_v4lineColor;
 			float m_fradius;
