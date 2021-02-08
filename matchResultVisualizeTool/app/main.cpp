@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <future>
 
 #include <glog/logging.h>
 
@@ -32,18 +33,7 @@ namespace VF = VisualTool::FileUtility;
 namespace VP = VisualTool::PointIO;
 namespace VN = VisualTool::Node;
 
-osg::Vec4 toOSGVec4(const std::vector<float> &colors_)
-{
-	if (colors_.size() < 4)
-	{
-		return osg::Vec4(1.f, 1.f, 1.f, 1.f);
-	}
-
-	osg::Vec4 v(colors_[0], colors_[1], colors_[2], colors_[3]);
-	return v;
-}
-
-int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<std::string> &files)
+int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<std::string> &files, std::promise<int> &pro_obj)
 {
 	int node_size = node_ptr_vec.size();
 	int file_size = files.size();
@@ -72,18 +62,23 @@ int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<s
 	{
 		std::string node_name = VF::GetNameWithoutExt(files[i]);
 		std::string node_full_out_name = base_path + "/" + node_name + ".osg";
-		if (!osgDB::writeNodeFile(*node_ptr_vec[i], node_full_out_name))
+		if (node_ptr_vec[i])
 		{
-			LOG(WARNING) << "Current node fail to be saved: " << node_full_out_name;
-		}
+			if (!osgDB::writeNodeFile(*node_ptr_vec[i], node_full_out_name))
+			{
+				LOG(WARNING) << "Current node fail to be saved: " << node_full_out_name;
+			}
+		}	
 	}
 
+	// set return value in promise
+	pro_obj.set_value(ret);
 	return ret;
 }
 
 /*
 依赖库尽可能少：pcl，boost，osg，glog，yaml-cpp
-功能：可以读取多个las文件和匹配结果文件，通过osg显示两部分点云，并用直线表示匹配关系，可以通过键盘来调整显示的是那个哪个匹配关系
+通过键盘来调整显示的是那个哪个匹配关系
 并通过osg上的界面来显示匹配对数量，匹配文件名字
 */
 int main(int argc, char** argv)
@@ -103,17 +98,39 @@ int main(int argc, char** argv)
 		LOG(ERROR) << "Usage: matchResultVisualizeTool.exe configuration-file.yaml" << std::endl;
 		google::FlushLogFiles(google::GLOG_ERROR);
 		google::ShutdownGoogleLogging();
+		system("pause");
 		return 0;
 	}
 
 	// ger configuration parameter file
 	std::string config_file = argv [1];
-	YAML::Node config = YAML::LoadFile(config_file);
-	if (!config.IsDefined())
+	if (!VF::FileExist(config_file))
 	{
 		LOG(ERROR) << "The configuration file is not existed! plz check it." << std::endl;
 		google::FlushLogFiles(google::GLOG_ERROR);
 		google::ShutdownGoogleLogging();
+		system("pause");
+		return 0;
+	}
+		
+	YAML::Node config;
+	try {
+		config = YAML::LoadFile(config_file);
+	}
+	catch (const YAML::ParserException& ex) {
+		LOG(ERROR) << ex.what() << std::endl;
+		google::FlushLogFiles(google::GLOG_ERROR);
+		google::ShutdownGoogleLogging();
+		system("pause");
+		return 0;
+	}
+
+	if (!config.IsDefined())
+	{
+		LOG(ERROR) << "Fail to load the configuration file! plz check it." << std::endl;
+		google::FlushLogFiles(google::GLOG_ERROR);
+		google::ShutdownGoogleLogging();
+		system("pause");
 		return 0;
 	}
 
@@ -126,8 +143,18 @@ int main(int argc, char** argv)
 	VisualTool::Point3d offset_src;
 
 	// color setting
-	std::vector<float> color_vec = config["ColorPatch1"].as<std::vector<float>>();
-	osg::Vec4 color_src = toOSGVec4(color_vec);
+	osg::Vec4 color_src;
+	if (config["ColorPatch1"].size() != 4)
+	{
+		color_src = osg::Vec4(1.f, 0.f, 0.f, 1.f);
+	}
+	else
+	{
+		color_src[0] = config["ColorPatch1"]["r"].as<float>();
+		color_src[1] = config["ColorPatch1"]["g"].as<float>();
+		color_src[2] = config["ColorPatch1"]["b"].as<float>();
+		color_src[3] = config["ColorPatch1"]["a"].as<float>();
+	}
 	
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_src(n_patch1);
 	for (int i = 0; i < n_patch1; i++)
@@ -151,8 +178,16 @@ int main(int argc, char** argv)
 	VisualTool::Point3d offset_tar;
 
 	// color setting
-	color_vec = config["ColorPatch2"].as<std::vector<float>>();
-	osg::Vec4 color_tar = toOSGVec4(color_vec);
+	osg::Vec4 color_tar;
+	if (!config["ColorPatch2"].IsSequence())
+	{
+		color_tar = osg::Vec4(0.f, 1.f, 0.f, 1.f);
+	}
+	else
+	{
+		std::vector<float> color_vec = config["ColorPatch2"].as<std::vector<float>>();
+		color_tar = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+	}
 
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_tar(n_patch2);
 	for (int i = 0; i < n_patch2; i++)
@@ -170,6 +205,26 @@ int main(int argc, char** argv)
 	float pt_size = config["PointSize"].as<float>();
 	float line_width = config["LineWidth"].as<float>();
 
+	osg::Vec4 color_line, color_pt;
+	if (!config["PointColor"].IsSequence())
+	{
+		color_pt = osg::Vec4(1.f, 1.f, 1.f, 1.f);
+	}
+	else
+	{
+		std::vector<float> color_vec = config["PointColor"].as<std::vector<float>>();
+		color_pt = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+	}
+	if (!config["LineColor"].IsSequence())
+	{
+		color_line = osg::Vec4(0.f, 0.f, 1.f, 1.f);
+	}
+	else
+	{
+		std::vector<float> color_vec = config["LineColor"].as<std::vector<float>>();
+		color_line = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+	}
+
 	std::string base_path = config["MatchResultPath"].as<std::string>();
 	std::vector<std::string> match_files;
 	VF::GetFiles(base_path, ".mrf", match_files);
@@ -178,7 +233,7 @@ int main(int argc, char** argv)
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_match(n_match);
 	for (int i = 0; i < n_match; i++)
 	{
-		VN::lineNode line_node(match_files[i], color_tar, color_tar, pt_size, line_width);
+		VN::lineNode line_node(match_files[i], color_pt, color_line, pt_size, line_width);
 		nodeptr_vec_match[i] = line_node.getGeoNode();
 	}
 
@@ -197,9 +252,25 @@ int main(int argc, char** argv)
 	}
 
 	// check whether to save nodes
+	std::thread *saveNode_thread_1, *saveNode_thread_2, *saveNode_thread_3;
+	std::promise<int> saveNode_promise_obj_1, saveNode_promise_obj_2, saveNode_promise_obj_3;
+	std::future<int> saveNode_future_1 = saveNode_promise_obj_1.get_future();
+	std::future<int> saveNode_future_2 = saveNode_promise_obj_2.get_future();
+	std::future<int> saveNode_future_3 = saveNode_promise_obj_3.get_future();
 	if (std::stoi(config["SaveNodes"].as<std::string>()) == 1)
 	{
-		std::thread saveNode_thread(saveNodes, std::ref(nodeptr_vec_src), std::ref(las_patch1_files));
+		LOG(INFO) << "Begin to save nodes, current thread id is: " << std::this_thread::get_id();
+		// in sub thread
+		saveNode_thread_1 = new std::thread(saveNodes, std::ref(nodeptr_vec_src), std::ref(las_patch1_files), std::ref(saveNode_promise_obj_1));
+		saveNode_thread_2 = new std::thread(saveNodes, std::ref(nodeptr_vec_tar), std::ref(las_patch2_files), std::ref(saveNode_promise_obj_2));
+		saveNode_thread_3 = new std::thread(saveNodes, std::ref(nodeptr_vec_match), std::ref(match_files), std::ref(saveNode_promise_obj_3));
+		
+		// using async but could not get thread id and multi-time return number
+		//saveNode_future = std::async(saveNodes, std::ref(nodeptr_vec_src), std::ref(las_patch1_files));
+		
+		LOG(INFO) << "Save nodes in new sub thread, thread id is: " << saveNode_thread_1->get_id();
+		LOG(INFO) << "Save nodes in new sub thread, thread id is: " << saveNode_thread_2->get_id();
+		LOG(INFO) << "Save nodes in new sub thread, thread id is: " << saveNode_thread_3->get_id();
 	}
 
 	//get the resolution of the window screen
@@ -211,8 +282,7 @@ int main(int argc, char** argv)
 	}
 
 	unsigned int win_width = 0, win_height = 0;
-	std::vector<int> winsize_vec = config["WindowSize"].as<std::vector<int>>();
-	if (winsize_vec.empty())
+	if (!config["WindowSize"].IsSequence() || config["WindowSize"].size() != 2)
 	{
 		LOG(WARNING) << "No window size is set!, the osg window will be set as default size of 1920x1080";
 		win_width = 1920;
@@ -220,8 +290,8 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		win_width = winsize_vec[0];
-		win_height = winsize_vec[1];
+		win_width = config["WindowSize"][0].as<int>();
+		win_height = config["WindowSize"][1].as<int>();
 	}
 
 	osg::GraphicsContext::ScreenIdentifier main_screen_id;
@@ -237,7 +307,6 @@ int main(int argc, char** argv)
 
 	//这里是单屏幕显示
 	viewer.setUpViewOnSingleScreen(1);
-	//viewer.apply(new osgViewer::SingleScreen(0));
 
 	osgViewer::GraphicsWindow *pWnd = dynamic_cast<osgViewer::GraphicsWindow*>(viewer.getCamera()->getGraphicsContext());
 	if (pWnd)
@@ -245,7 +314,17 @@ int main(int argc, char** argv)
 		pWnd->setWindowDecoration(false);
 	}
 
-	return viewer.run();
+	//check whether the sub saveNode_thread is still existed or not
+	if (std::stoi(config["SaveNodes"].as<std::string>()) == 1)
+	{
+		if (saveNode_future_1.get() == n_patch1 && saveNode_future_2.get() == n_patch2 && saveNode_future_3.get() == n_match)
+		{
+			LOG(INFO) << "Whole node files are successfully saved!";
+		}
+	}
+
+	viewer.realize();
+	viewer.run();
 
 	system("pause");
 	return 0;
