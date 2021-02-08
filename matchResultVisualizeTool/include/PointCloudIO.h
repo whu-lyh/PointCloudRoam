@@ -69,6 +69,9 @@ namespace VisualTool {
 		extern bool loadSingleLAS(const std::string& filename, const typename pcl::PointCloud<T>::Ptr& cloud, Point3d& las_offset);
 
 		template <typename T>
+		extern bool loadSingleLASHeader(const std::string& filename, Point3d& las_offset);
+
+		template <typename T>
 		extern bool saveLAS(const std::string& filepath, const typename pcl::PointCloud<T>::Ptr& cloud,
 			const Point3d& offset = Point3d());
 

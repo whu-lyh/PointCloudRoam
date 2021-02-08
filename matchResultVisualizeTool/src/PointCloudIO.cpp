@@ -8,8 +8,9 @@
 #include <boost/version.hpp>
 #include <boost/filesystem.hpp>
 
-#include "../include/PointCloudIO.h"
-#include "../include/PointType.h"
+#include "PointCloudIO.h"
+#include "PointType.h"
+#include "FileUtility.h"
 
 namespace VisualTool {
 	using namespace boost;
@@ -257,21 +258,21 @@ namespace VisualTool {
 		template <typename T>
 		bool loadSingleLAS(const std::string& filename, const typename pcl::PointCloud<T>::Ptr& cloud, Point3d& las_offset)
 		{
-			if (!FileUtility::FileExist(filename))
+			if (!VisualTool::FileUtility::FileExist(filename))
 			{
-				std::cerr << "'" << filename << "' doesn't exist!" << std::endl;
+				LOG (ERROR) << "'" << filename << "' doesn't exist!" << std::endl;
 				return false;
 			}
 
-			if (FileUtility::IsDirectory(filename))
+			if (VisualTool::FileUtility::IsDirectory(filename))
 			{
-				std::cerr << "'" << filename << "' is a directory!" << std::endl;
+				LOG (ERROR) << "'" << filename << "' is a directory!" << std::endl;
 				return false;
 			}
 
 			if (cloud == nullptr)
 			{
-				std::cerr << "pointer 'cloud' is nullptr!" << std::endl;
+				LOG (ERROR) << "pointer 'cloud' is nullptr!" << std::endl;
 				return false;
 			}
 
@@ -281,7 +282,7 @@ namespace VisualTool {
 				//check extension
 				std::string ext = filesystem::extension(filename);
 				if (ext.compare(".las"))
-					std::cerr << "It's a inappropriate file format." << std::endl;
+					LOG (ERROR) << "It's a inappropriate file format." << std::endl;
 
 				//open file
 				std::ifstream ifs;
@@ -296,7 +297,7 @@ namespace VisualTool {
 				uint8_t minor_version = header.GetVersionMinor();
 				if (major_version > 1 || minor_version > 3)
 				{
-					std::cerr << "Currently this app doesn't support version newer than 1.4" << std::endl;
+					LOG (ERROR) << "Currently this app doesn't support version newer than 1.4" << std::endl;
 					return false;
 				}
 
@@ -314,7 +315,7 @@ namespace VisualTool {
 				liblas::Bounds<double> bound = header.GetExtent();
 				if (bound.empty())
 				{
-					std::cerr << "The header of this las doesn't contain extent. The cache cannot be built." << std::endl;
+					LOG (ERROR) << "The header of this las doesn't contain extent. The cache cannot be built." << std::endl;
 					return false;
 				}
 
@@ -336,7 +337,7 @@ namespace VisualTool {
 					HANDLE mapping_handle = CreateFileMapping(file_handle, NULL, PAGE_READONLY, 0, 0, "LAS FILE MAPPING");
 					if (INVALID_HANDLE_VALUE == mapping_handle)
 					{
-						std::cerr << "Mapping file failed." << std::endl;
+						LOG (ERROR) << "Mapping file failed." << std::endl;
 						return false;
 					}
 
@@ -392,7 +393,70 @@ namespace VisualTool {
 			}
 			catch (std::exception* e)
 			{
-				std::cerr << "Error occured when parsing las file: " << e->what() << std::endl;
+				LOG (ERROR) << "Error occured when parsing las file: " << e->what() << std::endl;
+			}
+
+			return true;
+		}
+
+		template <typename T>
+		bool loadSingleLASHeader(const std::string& filename, Point3d& las_offset)
+		{
+			if (!VisualTool::FileUtility::FileExist(filename))
+			{
+				LOG (ERROR) << "'" << filename << "' doesn't exist!" << std::endl;
+				return false;
+			}
+
+			if (VisualTool::FileUtility::IsDirectory(filename))
+			{
+				LOG (ERROR) << "'" << filename << "' is a directory!" << std::endl;
+				return false;
+			}
+
+			LOG(INFO) << "Load file: " << filename << std::endl;
+			try
+			{
+				//check extension
+				std::string ext = filesystem::extension(filename);
+				if (ext.compare(".las"))
+					LOG (ERROR) << "It's a inappropriate file format." << std::endl;
+
+				//open file
+				std::ifstream ifs;
+				ifs.open(filename, std::ios::in | std::ios::binary);
+				if (!ifs)
+					return false;
+
+				liblas::ReaderFactory f;
+				liblas::Reader reader = f.CreateWithStream(ifs);
+				const liblas::Header header = reader.GetHeader();
+				uint8_t major_version = header.GetVersionMajor();
+				uint8_t minor_version = header.GetVersionMinor();
+				if (major_version > 1 || minor_version > 3)
+				{
+					LOG (ERROR) << "Currently this app doesn't support version newer than 1.4" << std::endl;
+					return false;
+				}
+
+				double offset_x = header.GetOffsetX();
+				double offset_y = header.GetOffsetY();
+				double offset_z = header.GetOffsetZ();
+				las_offset = Point3d(offset_x, offset_y, offset_z);
+
+				//bounding box
+				liblas::Bounds<double> bound = header.GetExtent();
+				if (bound.empty())
+				{
+					LOG (ERROR) << "The header of this las doesn't contain extent. The cache cannot be built." << std::endl;
+					return false;
+				}
+
+				ifs.close();
+			}
+			catch (std::exception* e)
+			{
+				LOG (ERROR) << "Error occured when parsing las file: " << e->what() << std::endl;
 			}
 
 			return true;
@@ -404,13 +468,13 @@ namespace VisualTool {
 		{
 			if (cloud == nullptr)
 			{
-				std::cerr << "Pointer 'cloud' is nullptr!" << std::endl;
+				LOG (ERROR) << "Pointer 'cloud' is nullptr!" << std::endl;
 				return false;
 			}
 
 			if (cloud->empty())
 			{
-				std::cerr << "Point cloud is empty!" << std::endl;
+				LOG (ERROR) << "Point cloud is empty!" << std::endl;
 				return false;
 			}
 
@@ -456,7 +520,7 @@ namespace VisualTool {
 		{
 			if (cloud == nullptr)
 			{
-				std::cerr << "pointer 'cloud' is nullptr!" << std::endl;
+				LOG (ERROR) << "pointer 'cloud' is nullptr!" << std::endl;
 				return false;
 			}
 
@@ -474,13 +538,13 @@ namespace VisualTool {
 		{
 			if (cloud == nullptr)
 			{
-				std::cerr << "pointer 'cloud' is nullptr!" << std::endl;
+				LOG (ERROR) << "pointer 'cloud' is nullptr!" << std::endl;
 				return false;
 			}
 
 			if (cloud->empty())
 			{
-				std::cerr << "point cloud is empty!" << std::endl;
+				LOG (ERROR) << "point cloud is empty!" << std::endl;
 				return false;
 			}
 

@@ -29,6 +29,7 @@ namespace VisualTool {
 
 			osg::ref_ptr<osg::Geode> getGeoNode();
 			VisualTool::Offset getOffset();
+			void setAveOffset(const VisualTool::Offset &off);
 
 		private:
 			std::string m_sFile_path;

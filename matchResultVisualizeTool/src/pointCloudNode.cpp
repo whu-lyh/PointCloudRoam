@@ -40,9 +40,16 @@ namespace VisualTool {
 		}
 
 		template<typename PointT>
+		void pointCloudNode<PointT>::setAveOffset(const VisualTool::Offset &off)
+		{
+			m_offset = off;
+		}
+
+		template<typename PointT>
 		osg::ref_ptr<osg::Geode> pointCloudNode<PointT>::getGeoNode()
 		{
-			if (!PointIO::loadSingleLAS<PointT>(m_sFile_path, m_PointCloudPtr, m_offset))
+			VisualTool::Point3d offset_tmp;
+			if (!PointIO::loadSingleLAS<PointT>(m_sFile_path, m_PointCloudPtr, offset_tmp))
 			{
 				LOG(WARNING) << "No point cloud is loaded";
 				return new osg::Geode();
@@ -60,6 +67,10 @@ namespace VisualTool {
 					if (i % 5 == 0)
 					{
 						auto pt = m_PointCloudPtr->points[i];
+						// update node offset
+						pt.x = pt.x + offset_tmp.x - m_offset.x;
+						pt.y = pt.y + offset_tmp.y - m_offset.y;
+						pt.z = pt.z + offset_tmp.z - m_offset.z;
 						coords->push_back(osg::Vec3(pt.x, pt.y, pt.z));
 						colors->push_back(m_v4Color);
 					}
