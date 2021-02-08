@@ -21,7 +21,7 @@ namespace VisualTool {
 		public:
 			lineNode();
 			~lineNode();
-			lineNode(const std::string file_path, const osg::Vec4 pt_color = osg::Vec4(1.f, 0.f, 1.f, 1.f),
+			lineNode(const std::string file_path, const osg::Vec4 pt_color = osg::Vec4(1.f, 1.f, 1.f, 1.f),
 				const osg::Vec4 line_color = osg::Vec4(0.f, 0.f, 1.f, 1.f), const float radius = 0.1f, const float width = 0.1f);
 
 			osg::ref_ptr<osg::Geode> getGeoNode();
