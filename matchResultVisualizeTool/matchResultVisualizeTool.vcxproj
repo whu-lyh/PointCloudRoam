@@ -24,6 +24,7 @@
     <ClInclude Include="include\PointCloudIO.h" />
     <ClInclude Include="include\pointCloudNode.h" />
     <ClInclude Include="include\PointType.h" />
+    <ClInclude Include="include\UserKeyBoardHandler.h" />
     <ClInclude Include="include\VisualizeLibs.h" />
   </ItemGroup>
   <ItemGroup>

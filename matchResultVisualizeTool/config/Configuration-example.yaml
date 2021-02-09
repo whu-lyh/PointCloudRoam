@@ -28,7 +28,7 @@ WindowSize:
     - 1920 # width
     - 1080 # height
 
-PointSize: 0.5 
-LineWidth: 0.2 
-PointColor: [0.0,0.0,0.0,0.0] #black
+PointSize: 0.15 
+LineWidth: 0.5 
+PointColor: [0.0,0.0,0.0,1.0] #black
 LineColor: [0.0,0.0,1.0,1.0]

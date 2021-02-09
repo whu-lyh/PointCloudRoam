@@ -33,6 +33,9 @@
     <ClInclude Include="include\lineNode.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\UserKeyBoardHandler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FileUtility.cpp">
