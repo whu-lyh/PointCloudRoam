@@ -28,6 +28,11 @@ namespace VisualTool {
 			m_pGeoNode = new osg::Geode();
 		}
 
+		int lineNode::getLineNum()
+		{
+			return m_iNum;
+		}
+
 		void lineNode::setAveOffset(const VisualTool::Offset &off)
 		{
 			m_offset = off;
@@ -52,8 +57,8 @@ namespace VisualTool {
 			int num_line = 0;
 			std::ifstream file;
 			file.open(m_sFile_path);
-			int pair_count = 0;
-			file >> pair_count;
+
+			file >> m_iNum;
 			while (!file.eof())
 			{
 				++num_line;
