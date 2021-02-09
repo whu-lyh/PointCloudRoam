@@ -6,6 +6,9 @@
 	Email:	yhaoli@whu.edu.cn
 */
 
+#ifndef POINTCLOUDIO_H
+#define POINTCLOUDIO_H
+
 #pragma once
 
 #include "visualizeLibs.h"
@@ -87,3 +90,5 @@ namespace VisualTool {
 
 #define TEMPLATE_POINTCLOUD_IO
 #include "../src/PointCloudIO.cpp"
+
+#endif //POINTCLOUDIO_H

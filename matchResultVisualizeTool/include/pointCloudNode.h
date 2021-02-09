@@ -6,6 +6,9 @@
 	Email:	yhaoli@whu.edu.cn
 */
 
+#ifndef POINTCLOUDNODE_H
+#define POINTCLOUDNODE_H
+
 #pragma once
 
 #include <osgViewer/Viewer>
@@ -45,3 +48,5 @@ namespace VisualTool {
 
 #define TEMPLATE_POINTCLOUD_NODE
 #include "../src/pointCloudNode.cpp"
+
+#endif //POINTCLOUDNODE_H

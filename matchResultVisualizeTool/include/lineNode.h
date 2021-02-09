@@ -6,6 +6,9 @@
 	Email:	yhaoli@whu.edu.cn
 */
 
+#ifndef LINENODE_H
+#define LINENODE_H
+
 #pragma once
 
 #include <osgViewer/Viewer>
@@ -40,3 +43,5 @@ namespace VisualTool {
 		};
 	} //Node
 }// VisualTool
+
+#endif //LINENODE_H

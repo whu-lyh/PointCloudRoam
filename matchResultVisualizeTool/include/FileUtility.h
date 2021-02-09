@@ -1,3 +1,14 @@
+/*
+	Copyright (c) 2020 WuHan University. All Rights Reserved
+	First create: 2020/12/06
+	Detail: basic file utility interface
+	Author:	xianghong zou
+	Email:	xhzou_whu@foxmail.com
+*/
+
+#ifndef FILRUTILITY_H
+#define FILRUTILITY_H
+
 #pragma once
 
 #include <float.h>
@@ -57,3 +68,5 @@ void GetFilesOrDirs(const std::string& dir,
 	const bool get_files, const std::string& ext, filelist& list);
 }  // namespace FileUtility
 }  // namespace VisualTool
+
+#endif //FILRUTILITY_H

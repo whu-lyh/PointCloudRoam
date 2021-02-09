@@ -6,6 +6,9 @@
 	Email:	yhaoli@whu.edu.cn
 */
 
+#ifndef VISUALIZELIBS_H
+#define VISUALIZELIBS_H
+
 #pragma once
 
 #pragma warning(disable: 4273)
@@ -54,3 +57,5 @@
 #pragma comment(lib, "pcl_common_release.lib")
 #pragma comment(lib, "pcl_kdtree_release.lib")
 #endif
+
+#endif //VISUALIZELIBS_H
