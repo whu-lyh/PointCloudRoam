@@ -20,6 +20,14 @@
 #include <osgDB/WriteFile>
 #include <osgDB/Registry>
 #include <osgText/Text>
+#include <osgViewer/ViewerEventHandlers>
+#include <osgGA/StateSetManipulator>
+#include <osgGA/TrackballManipulator>
+#include <osgGA/FlightManipulator>
+#include <osgGA/DriveManipulator>
+#include <osgGA/TerrainManipulator>
+#include <osgGA/KeySwitchMatrixManipulator>
+#include <osgUtil/Optimizer>
 
 #include <yaml-cpp/yaml.h>
 
@@ -28,10 +36,12 @@
 #include "../include/PointCloudIO.h"
 #include "../include/pointCloudNode.h"
 #include "../include/lineNode.h"
+#include "../include/UserKeyBoardHandler.h"
 
 namespace VF = VisualTool::FileUtility;
 namespace VN = VisualTool::Node;
 
+// 1 is the minimum number
 #define interval 2
 
 int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<std::string> &files, std::promise<int> &pro_obj)
@@ -77,93 +87,56 @@ int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<s
 	return ret;
 }
 
-osg::ref_ptr<osg::Node> getHudTextNode(const std::string &match_result_name)
+osg::ref_ptr<osg::Node> getHudTextNode(const std::string &match_result_name,const float pos)
 {
 	osg::ref_ptr<osg::Group> pGroup = new osg::Group();
 	osg::ref_ptr<osg::Geode> pGeode = new osg::Geode();
-	osg::ref_ptr<osgText::Text> pText = 0;
-	// 步骤一：实例化文字类
-	pText = new osgText::Text();
-	// 步骤二：设置 文字颜色: 红色， 透明度有效（opengl需要额外开启透明通道）
-	pText->setColor(osg::Vec4f(0.0, 0.0, 1.0, 1.0));
-	// 步骤三：设置 文字位置（设置文字框的中心点的坐标)
-	pText->setPosition(osg::Vec3f(0, 0, 0));
-	// 步骤四：设置 文字方向
-	pText->setAxisAlignment(osgText::Text::XZ_PLANE);
-	// 步骤五：设置 大小模式(测试当前没发现有什么区别）
-	pText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
-	// 步骤六：设置 分辨率
-	pText->setFontResolution(1920, 1080);
-	// 步骤七：设置 对齐方式
-	pText->setAlignment(osgText::Text::LEFT_BOTTOM);
-	// 步骤八：设置 输出格式
-	pText->setLayout(osgText::Text::LEFT_TO_RIGHT);
-	// 步骤九：设置 绘制模式
-	pText->setDrawMode(osgText::Text::TEXT);
-	// 步骤十：设置 背景类型
-	pText->setBackdropType(osgText::Text::NONE);
-	// 步骤十一：设置 颜色倾斜模式
-	pText->setColorGradientMode(osgText::Text::SOLID);
-	// 以上部分属性是默认的，可以不设置，此处为阅读都写出来
+	osg::ref_ptr<osgText::Text> pText = new osgText::Text();
+
+	pText->setFont(osgText::readFontFile("fonts/simsun.ttc"));
 	pText->setText(match_result_name, osgText::String::ENCODING_UTF8);
-	// artifact code
-	//pText->setFont(osgText::readFontFile("fonts/simsun.ttc"));
+	pText->setPosition(osg::Vec3f(0.0, pos, 0.0));
+	pText->setCharacterSize(25);
+	pText->setColor(osg::Vec4f(0.0, 0.0, 1.0, 1.0));
+	pText->setDrawMode(osgText::Text::TEXT);
+	// 此条会导致hub不显示（必须设置为SCREEN）
+	// pText->setAxisAlignment(osgText::Text::XZ_PLANE);
+	pText->setAxisAlignment(osgText::Text::XY_PLANE);
+	pText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
+	pText->setFontResolution(160, 80);
+	pText->setAlignment(osgText::Text::LEFT_BOTTOM);
+	pText->setLayout(osgText::Text::LEFT_TO_RIGHT);
+	pText->setBackdropType(osgText::Text::NONE);
+	pText->setColorGradientMode(osgText::Text::SOLID);
+
+	// 步骤一：创建HUD摄像机
+	osg::ref_ptr<osg::Camera> pCamera = new osg::Camera;
+	// 步骤二：设置投影矩阵
+	pCamera->setProjectionMatrix(osg::Matrix::ortho2D(0, 1920, 0, 1080));
+	// 步骤三：设置视图矩阵,同时确保不被场景中其他图形位置变换影响, 使用绝对帧引用
+	pCamera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
+	pCamera->setViewMatrix(osg::Matrix::identity());
+	// 步骤四：清除深度缓存
+	pCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
+	// 步骤五：设置POST渲染顺序(最后渲染)
+	pCamera->setRenderOrder(osg::Camera::POST_RENDER);
+	// 步骤六：设置为不接收事件,始终得不到焦点
+	pCamera->setAllowEventFocus(false);
+
+	pGeode = new osg::Geode();
+	osg::ref_ptr<osg::StateSet> pStateSet = pGeode->getOrCreateStateSet();
+	// 步骤七：关闭光照
+	pStateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+	// 步骤八：关闭深度测试
+	pStateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+
 	pGeode->addDrawable(pText.get());
-	pGroup->addChild(pGeode);
+	pCamera->addChild(pGeode.get());
+	pGroup->addChild(pCamera.get());
 
-	// 增加新的文字，增加相机实现hud
-	{
-		pText = new osgText::Text();
-		pText->setFont(osgText::readFontFile("fonts/simsun.ttc"));
-		std::string text = "liyuhao";
-		pText->setText(text, osgText::String::ENCODING_UTF8);
-		pText->setPosition(osg::Vec3f(0, 0, 0));
-		pText->setCharacterSize(40);
-		pText->setColor(osg::Vec4f(1.0, 1.0, 1.0, 1.0));
-		pText->setDrawMode(osgText::Text::TEXT);
-		// 此条会导致hub不显示（必须设置为SCREEN）
-		// pText->setAxisAlignment(osgText::Text::XZ_PLANE);
-		pText->setAxisAlignment(osgText::Text::XY_PLANE);
-		pText->setCharacterSizeMode(osgText::Text::OBJECT_COORDS);
-		pText->setFontResolution(32, 32);
-		pText->setAlignment(osgText::Text::LEFT_BOTTOM);
-		pText->setLayout(osgText::Text::LEFT_TO_RIGHT);
-		pText->setBackdropType(osgText::Text::NONE);
-		pText->setColorGradientMode(osgText::Text::SOLID);
-
-		// 步骤一：创建HUD摄像机
-		osg::ref_ptr<osg::Camera> pCamera = new osg::Camera;
-		// 步骤二：设置投影矩阵
-		pCamera->setProjectionMatrix(osg::Matrix::ortho2D(0, 1920, 0, 1080));
-		// 步骤三：设置视图矩阵,同时确保不被场景中其他图形位置变换影响, 使用绝对帧引用
-		pCamera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
-		pCamera->setViewMatrix(osg::Matrix::identity());
-		// 步骤四：清除深度缓存
-		pCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
-		// 步骤五：设置POST渲染顺序(最后渲染)
-		pCamera->setRenderOrder(osg::Camera::POST_RENDER);
-		// 步骤六：设置为不接收事件,始终得不到焦点
-		pCamera->setAllowEventFocus(false);
-
-		pGeode = new osg::Geode();
-		osg::ref_ptr<osg::StateSet> pStateSet = pGeode->getOrCreateStateSet();
-		// 步骤七：关闭光照
-		pStateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-		// 步骤八：关闭深度测试
-		pStateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-
-		pGeode->addDrawable(pText.get());
-		pCamera->addChild(pGeode.get());
-		pGroup->addChild(pCamera.get());
-	}
 	return pGroup.get();
 }
 
-/*
-依赖库尽可能少：pcl，boost，osg，glog，yaml-cpp
-通过键盘来调整显示的是那个哪个匹配关系
-并通过osg上的界面来显示匹配对数量，匹配文件名字
-*/
 int main(int argc, char** argv)
 {
 	//glog setting
@@ -324,14 +297,22 @@ int main(int argc, char** argv)
 	}
 
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_match(n_match);
+	std::vector<osg::ref_ptr<osg::Node>> nodeptr_vec_match_text(n_match);
+	float line_vertical_spacing = 0.f;
 	for (int i = 0; i < n_match; i++)
 	{
 		VN::lineNode line_node(match_files[i], color_pt, color_line, pt_size, line_width);
 		line_node.setAveOffset(offset_average);
 		nodeptr_vec_match[i] = line_node.getGeoNode();
+		std::string label = "No."+std::to_string(i)+" \t"+VisualTool::FileUtility::GetNameWithoutExt(match_files[i]) +
+			", matched numbers: " + std::to_string(line_node.getLineNum());
+		nodeptr_vec_match_text[i] = getHudTextNode(label, line_vertical_spacing);
+		line_vertical_spacing += 25;
 	}
 
-	osg::ref_ptr<osg::Group> root = new osg::Group;
+	// base root node
+	//osg::ref_ptr<osg::Group> root = new osg::Group;
+	osg::ref_ptr<osg::Switch> root = new osg::Switch;
 	for (auto node: nodeptr_vec_src)
 	{
 		root->addChild(node);
@@ -344,9 +325,11 @@ int main(int argc, char** argv)
 	{
 		root->addChild(node);
 	}
-
 	// text display
-	//root->addChild(getHudTextNode("bsc"));
+	for (auto node : nodeptr_vec_match_text)
+	{
+		root->addChild(node);
+	}
 
 	// check whether to save nodes
 	std::thread *saveNode_thread_1, *saveNode_thread_2, *saveNode_thread_3;
@@ -398,7 +381,25 @@ int main(int argc, char** argv)
 	wsi->getScreenResolution(main_screen_id, win_width, win_height);
 
 	osgViewer::Viewer viewer;
+	viewer.addEventHandler(new osgGA::StateSetManipulator(viewer.getCamera()->getOrCreateStateSet()));
+	viewer.addEventHandler(new osgViewer::WindowSizeHandler());
+	viewer.addEventHandler(new osgViewer::StatsHandler());
+
+	{
+		osg::ref_ptr<osgGA::KeySwitchMatrixManipulator> keyswitchManipulator = new osgGA::KeySwitchMatrixManipulator;
+		keyswitchManipulator->addMatrixManipulator('1', "Trackball", new osgGA::TrackballManipulator());
+		keyswitchManipulator->addMatrixManipulator('2', "Flight", new osgGA::FlightManipulator());
+		keyswitchManipulator->addMatrixManipulator('3', "Drive", new osgGA::DriveManipulator());
+		keyswitchManipulator->addMatrixManipulator('4', "Terrain", new osgGA::TerrainManipulator());
+		viewer.setCameraManipulator(keyswitchManipulator.get());
+		viewer.addEventHandler(new osgViewer::RecordCameraPathHandler);
+	}
+
+	viewer.addEventHandler(new VisualTool::UserKeyBoardHandler());
+
 	viewer.getCamera()->setClearColor(osg::Vec4(1.f, 1.f, 1.f, 1.f)); //background=white
+	osgUtil::Optimizer optimizer;
+	optimizer.optimize(root.get());
 	viewer.setSceneData(root.get());
 	viewer.home();
 
