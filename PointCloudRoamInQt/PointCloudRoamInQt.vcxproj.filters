@@ -78,4 +78,7 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration.yaml" />
+  </ItemGroup>
 </Project>

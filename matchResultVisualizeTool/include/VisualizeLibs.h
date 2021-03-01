@@ -36,7 +36,7 @@
 
 #pragma comment(lib, "glogd.lib")
 
-#pragma comment(lib, "yaml-cppd.lib")
+#pragma comment(lib, "yaml-cpp_d.lib")
 
 #pragma comment(lib, "pcl_common_debug.lib")
 #pragma comment(lib, "pcl_kdtree_debug.lib")

@@ -3,7 +3,7 @@
 #ifndef POINTCLOUDROAMLIB_H
 #define POINTCLOUDROAMLIB_H
 /*
-this lib files is used for qt5	osg3.4+ glog  liblas1.8.1 json pcl-1.8.1
+this lib files is used for qt5	osg3.4+ glog  liblas1.8.1 pcl-1.8.1
 */
 
 #pragma warning(disable: 4273)
@@ -29,7 +29,6 @@ this lib files is used for qt5	osg3.4+ glog  liblas1.8.1 json pcl-1.8.1
 #include <osg/PositionAttitudeTransform>
 #include <osgGA/OrbitManipulator>
 #include <osgUtil/Optimizer>
-#include <json/json.h>
 
 #include <osgQt/GraphicsWindowQt>
 #include <osgQt/QFontImplementation>
@@ -66,14 +65,12 @@ this lib files is used for qt5	osg3.4+ glog  liblas1.8.1 json pcl-1.8.1
 #pragma comment(lib, "osgQtd.lib")
 #pragma comment(lib, "OpenThreadsd.lib")
 #pragma comment(lib, "osgTextd.lib")
-#pragma comment(lib, "jsoncpp.lib")
 #pragma comment(lib, "liblas.lib")
-#pragma comment(lib, "liblas_c.lib")
 #pragma comment(lib, "pcl_common_debug.lib")
 #pragma comment(lib, "pcl_kdtree_debug.lib")
 
 #pragma comment(lib, "glogd.lib")
-#pragma comment(lib, "opencv_core340d.lib")
+#pragma comment(lib, "opencv_core347d.lib")
 
 #pragma comment(lib, "Qt5Cored.lib")
 #pragma comment(lib, "Qt5Guid.lib")
@@ -90,13 +87,12 @@ this lib files is used for qt5	osg3.4+ glog  liblas1.8.1 json pcl-1.8.1
 #pragma comment(lib, "osgQt.lib")
 #pragma comment(lib, "OpenThreads.lib")
 #pragma comment(lib, "osgText.lib")
-#pragma comment(lib, "jsoncpp.lib")
 #pragma comment(lib, "liblas.lib")
 #pragma comment(lib, "pcl_common_release.lib")
 #pragma comment(lib, "pcl_kdtree_release.lib")
 
 #pragma comment(lib, "glog.lib")
-#pragma comment(lib, "opencv_core340.lib")
+#pragma comment(lib, "opencv_core347.lib")
 
 #pragma comment(lib, "Qt5Core.lib")
 #pragma comment(lib, "Qt5Gui.lib")

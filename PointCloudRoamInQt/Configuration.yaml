@@ -17,11 +17,11 @@
 #osg roam only need a few of view points which is different from others
 #TrajectoryFile: "D:/data/shanghai/1km2/roam/1km2.traj"
 
-#dataset Estonia
-PointFilepathOrigin: "D:/data/Estonia/roam/20200309/origin"
-PointFilepathRefine: "D:/data/Estonia/roam/20200309/refine"
+#dataset Shanghai
+PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
+PointFilepathRefine: "F:/Data/Zhangjiang8Block/outPC/refine"
 #osg roam only need a few of view points which is different from others
-TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display-down-perspective.traj"
+TrajectoryFile: "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj"
 #TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display.traj"
 
 #Roam view Info
@@ -37,5 +37,5 @@ RoamSpeed: 0.5
 OpenPerspective: 1
 
 #Shape Info
-OpenShpWindow: "true"
+OpenShpWindow: "false"
 ShapeFilepath: "D:/data/Estonia/roam/20200309/20200312Display/traj_block_shps_0/Trajectory0.shp"

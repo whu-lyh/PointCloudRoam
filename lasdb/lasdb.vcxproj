@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.1" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -22,7 +22,7 @@
     <VCProjectVersion>14.0</VCProjectVersion>
     <ProjectGuid>{233CC151-D789-4E1C-BB91-475EFC5AB5B5}</ProjectGuid>
     <RootNamespace>lasdb</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,13 +41,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -64,23 +64,9 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\qt571-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\opencv340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\osg340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\glog-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\pcl181-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\liblas181-vc14-debug.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\json-vc14.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\qt571-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\opencv340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\osg340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\glog-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\pcl181-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\liblas181-vc14-debug.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\json-vc14.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

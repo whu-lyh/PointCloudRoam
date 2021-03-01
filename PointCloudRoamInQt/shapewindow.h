@@ -7,34 +7,34 @@
 #include "PointCloudRoamLibs.h"
 #include "mygraphicwindowqt.h"
 
-class ShapeWindow :public QWidget
+class ShapeWindow:public QWidget
 {
 	Q_OBJECT
 
 public:
-	ShapeWindow ();
+	ShapeWindow();
 
-	~ShapeWindow () { killTimer ( _timerID ); }
+	~ShapeWindow() { killTimer(_timerID); }
 
-	MyGraphicWindowQt* createGraphicsWindow ( int x, int y, int w, int h, const std::string& name = "", bool windowDecoration = false );
+	MyGraphicWindowQt* createGraphicsWindow(int x, int y, int w, int h, const std::string& name = "", bool windowDecoration = false);
 
-	void setShapeSceneData ( osg::Node* nodeshape )
+	void setShapeSceneData(osg::Node* nodeshape)
 	{
-		_viewershape->setSceneData ( nodeshape );
+		_viewershape->setSceneData(nodeshape);
 	}
 
-	void setShapeCameraManipulator ( osgGA::CameraManipulator* manipulator, bool resetPosition = true )
+	void setShapeCameraManipulator(osgGA::CameraManipulator* manipulator, bool resetPosition = true)
 	{
-		_viewershape->setCameraManipulator ( manipulator, resetPosition );
+		_viewershape->setCameraManipulator(manipulator, resetPosition);
 	}
 
-	virtual void paintEvent ( QPaintEvent* event )
+	virtual void paintEvent(QPaintEvent* event)
 	{
-		_viewershape->frame ();
+		_viewershape->frame();
 	}
 
 public slots:
-	void onStartTimer ();
+	void onStartTimer();
 
 protected:
 	QTimer _timer;

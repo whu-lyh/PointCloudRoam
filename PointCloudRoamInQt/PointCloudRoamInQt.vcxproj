@@ -22,7 +22,7 @@
     <VCProjectVersion>14.0</VCProjectVersion>
     <ProjectGuid>{3330690C-4135-4FC5-86CD-94176F6DD644}</ProjectGuid>
     <RootNamespace>PointCloudRoamInQt</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,13 +41,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -58,39 +58,29 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\qt571-vc14.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\qt571-vc14.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\qt571-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\opencv340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\osg340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\glog-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\pcl181-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\liblas181-vc14-debug.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\json-vc14.props" />
+    <Import Project="C:\Users\yons\AppData\Local\Microsoft\MSBuild\v4.0\qt5.13.0.props" />
+    <Import Project="C:\Users\yons\AppData\Local\Microsoft\MSBuild\v4.0\osg364_v15_x64.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\qt571-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\opencv340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\osg340-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\glog-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\pcl181-vc14.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\liblas181-vc14-release.props" />
-    <Import Project="C:\Users\22135\AppData\Local\Microsoft\MSBuild\v4.0\json-vc14.props" />
+    <Import Project="C:\Users\yons\AppData\Local\Microsoft\MSBuild\v4.0\qt5.13.0.props" />
+    <Import Project="C:\Users\yons\AppData\Local\Microsoft\MSBuild\v4.0\osg364_v15_x64.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath);D:\Libraries_vs2017\lib\Release;D:\Software\Qt5.13.0\5.13.0\msvc2017_64\lib;D:\Software\opencv-3.4.7\install\x64\vc15\lib;D:\Software\libLAS-1.8.1\liblas-gdal1115\install\lib\release;D:\Software\pcl-1.8.1\lib</LibraryPath>
+    <IncludePath>$(IncludePath);D:\Libraries_vs2017\include;D:\Software\Qt5.13.0\5.13.0\msvc2017_64\include;D:\Software\opencv-3.4.7\install\include;D:\Software\libLAS-1.8.1\liblas-gdal1115\install\include;D:\Software\pcl-1.8.1\include\pcl-1.8</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Libraries_vs2017\lib\Debug;D:\Software\Qt5.13.0\5.13.0\msvc2017_64\lib;$(LibraryPath);D:\Software\opencv-3.4.7\install\x64\vc15\lib;D:\Software\libLAS-1.8.1\liblas-gdal1115\install\lib\debug;D:\Software\pcl-1.8.1\lib</LibraryPath>
     <TargetName>$(ProjectName)d</TargetName>
+    <IncludePath>D:\Libraries_vs2017\include;D:\Software\Qt5.13.0\5.13.0\msvc2017_64\include;$(IncludePath);D:\Software\opencv-3.4.7\install\include;D:\Software\libLAS-1.8.1\liblas-gdal1115\install\include;D:\Software\pcl-1.8.1\include\pcl-1.8</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -164,6 +154,9 @@
     <ClInclude Include="PointCloudRoamLibs.h" />
     <ClInclude Include="shapewindow.h" />
     <ClInclude Include="Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configuration.yaml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
