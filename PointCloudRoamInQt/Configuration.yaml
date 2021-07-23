@@ -1,9 +1,9 @@
 %YAML:1.0
 #Data info
 ##dataset wuhan GI
-#PointFilepathOrigin: "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN"
-#PointFilepathRefine: "F:/shanghai/Lu-block-data/All-in-lu/REFINE"
-#TrajectoryFile: "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj"
+PointFilepathOrigin: "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN"
+PointFilepathRefine: "F:/shanghai/Lu-block-data/All-in-lu/REFINE"
+TrajectoryFile: "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj"
 
 #dataset shanghai
 #PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
@@ -18,10 +18,10 @@
 #TrajectoryFile: "D:/data/shanghai/1km2/roam/1km2.traj"
 
 #dataset Shanghai
-PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
-PointFilepathRefine: "F:/Data/Zhangjiang8Block/outPC/refine"
+#PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
+#PointFilepathRefine: "F:/Data/Zhangjiang8Block/outPC/refine"
 #osg roam only need a few of view points which is different from others
-TrajectoryFile: "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj"
+#TrajectoryFile: "F:/Data/Zhangjiang8Block/outPC/small-trajfile.traj"
 #TrajectoryFile: "D:/data/Estonia/roam/20200309/20200312Display/Estonia-20200312Display.traj"
 
 #Roam view Info
