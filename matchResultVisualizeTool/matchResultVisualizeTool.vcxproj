@@ -96,8 +96,8 @@
     <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath);D:\Software\yaml-cpp-0.6.3\include</IncludePath>
-    <LibraryPath>$(LibraryPath);D:\Software\yaml-cpp-0.6.3\lib</LibraryPath>
+    <IncludePath>$(IncludePath);D:\Software\yaml-cpp-0.6.3\include;D:\Software\libLAS-1.8.1\libLAS-gdal203\install\include;$(ThirdPartyLibraries_vs2017_x64)\include</IncludePath>
+    <LibraryPath>$(LibraryPath);D:\Software\yaml-cpp-0.6.3\lib;D:\Software\libLAS-1.8.1\libLAS-gdal203\install\lib;$(ThirdPartyLibraries_vs2017_x64)\x64\vc15\lib\Release</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

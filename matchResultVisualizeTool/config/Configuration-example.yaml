@@ -2,33 +2,42 @@
 
 # Data info
 # here, treat the patch1 as src object
-PointCloudPatch1: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/patch1" 
+PointCloudPatch1: "G:/车载点云数据质量改善/实验记录-主要包括截图和示例点云/Experiments/Wuhan_gaojia_r5/pwreg/src" 
 # patch2's color
 ColorPatch1:
-    r: 1.0 
+    r: 0.0 
     g: 0.0 
-    b: 0.0 
+    b: 1.0 
     a: 1.0  
 # here, treat the patch2 as tar object
-PointCloudPatch2: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/patch2" 
+PointCloudPatch2: "G:/车载点云数据质量改善/实验记录-主要包括截图和示例点云/Experiments/Wuhan_gaojia_r5/pwreg/tar" 
 # patch2's color 
-ColorPatch2: [0.0,1.0,0.0,1.0]
+ColorPatch2: [1.0,0.0,0.0,1.0]
 #    - r: 0.0 
 #    - g: 1.0 
 #    - b: 0.0 
 #    - a: 1.0  
 
+PriorTrans:
+[1.0,0.0,0.0,-10.0,
+0.0,1.0,0.0,15.0,
+0.0,0.0,1.0,20.0,
+0.0,0.0,0.0,1.0]
+
 # match result file path, result is stored in the .mrf file 
-MatchResultPath: "E:/ProjectVolume/PointCloudRegistration/Test_Data3/pc/match_result_output" 
-# save data in osg node. 1 for ture, otherwise false
-SaveNodes: 0 
+MatchResultPath: "G:/车载点云数据质量改善/实验记录-主要包括截图和示例点云/Experiments/Wuhan_gaojia_r5/pwreg/matches" 
+# save data in osg node
+SaveNodes: false
 
 # OSG window settings
 WindowSize:
     - 1920 # width
     - 1080 # height
 
-PointSize: 0.15 
-LineWidth: 0.5 
-PointColor: [0.0,0.0,0.0,1.0] #black
-LineColor: [0.0,0.0,1.0,1.0]
+RandomLinkColor: false
+PointSize: 0.3 
+LineWidth: 3.0
+PointColor: [0.0,1.0,0.0,1.0]
+LineColor: [0.5,0.5,0.5,0.5]
+
+ShowText: false

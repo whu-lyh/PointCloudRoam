@@ -24,7 +24,7 @@ namespace VisualTool {
 		template <typename PointT>
 		class pointCloudNode
 		{
-			typedef boost::shared_ptr<pcl::PointCloud<PointT>> constPtr;
+			typedef boost::shared_ptr<pcl::PointCloud<PointT>> pc_ptr;
 		public:
 			pointCloudNode();
 			~pointCloudNode();
@@ -34,12 +34,14 @@ namespace VisualTool {
 			VisualTool::Offset getOffset();
 			void setAveOffset(const VisualTool::Offset &off);
 			void setDownSampleInterval(const int gap);
+			void setTransformation(const Eigen::Matrix4f &trans);
 
 		private:
 			std::string m_sFile_path;
-			constPtr m_PointCloudPtr;
+			pc_ptr m_PointCloudPtr;
 			VisualTool::Offset m_offset;
 			int m_intervel;
+			Eigen::Matrix4f m_trans;
 			osg::ref_ptr<osg::Geode> m_pGeoNode;
 			osg::Vec4 m_v4Color;
 		};

@@ -72,7 +72,7 @@ public:
 			if (ea.getButton() == 4) // OSG key code related to mouse push
 			{// hide all nodes
 				int num_nodes = viewer->getSceneData()->asSwitch()->getNumChildren();
-				for (int i = 2; i < num_nodes; i++)
+				for (int i = 2; i < 3; i++)
 				{
 					viewer->getSceneData()->asSwitch()->getChild(i)->setNodeMask(0);
 				}
@@ -82,7 +82,7 @@ public:
 			if (ea.getButton() == 1) // OSG key code related to mouse DOUBLECLICK
 			{// show all nodes
 				int num_nodes = viewer->getSceneData()->asSwitch()->getNumChildren();
-				for (int i = 2; i < num_nodes; i++)
+				for (int i = 2; i < 3; i++)
 				{
 					viewer->getSceneData()->asSwitch()->getChild(i)->setNodeMask(1);
 				}

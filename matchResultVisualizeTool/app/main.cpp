@@ -46,8 +46,8 @@ namespace VN = VisualTool::Node;
 
 int saveNodes(std::vector<osg::ref_ptr<osg::Geode>> &node_ptr_vec, std::vector<std::string> &files, std::promise<int> &pro_obj)
 {
-	int node_size = node_ptr_vec.size();
-	int file_size = files.size();
+	int node_size = (int)node_ptr_vec.size();
+	int file_size = (int)files.size();
 	int ret = 0;
 
 	if (node_size != file_size)
@@ -246,11 +246,25 @@ int main(int argc, char** argv)
 		color_tar = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
 	}
 
+	// pre transformation for better visualization
+	Eigen::Matrix4f prior_trans;
+	if (!config["PriorTrans"].IsSequence())
+	{
+		prior_trans = Eigen::Matrix4f::Identity();
+	}
+	else
+	{
+		const std::vector<float> vec_float = config["PriorTrans"].as<std::vector<float> >();
+		// if no transpose(), rowmajor for eigen matrix should be defined
+		prior_trans = Eigen::Matrix4f(vec_float.data()).transpose();
+	}
+
 	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_src(n_patch1);
 	for (int i = 0; i < n_patch1; i++)
 	{
 		VN::pointCloudNode<pcl::PointXYZ> pc_node(las_patch1_files[i], color_src);
 		pc_node.setAveOffset(offset_average);
+		pc_node.setTransformation(prior_trans);
 		pc_node.setDownSampleInterval(interval);
 		nodeptr_vec_src[i] = pc_node.getGeoNode();
 	}
@@ -264,29 +278,6 @@ int main(int argc, char** argv)
 		nodeptr_vec_tar[i] = pc_node.getGeoNode();
 	}
 
-	float pt_size = config["PointSize"].as<float>();
-	float line_width = config["LineWidth"].as<float>();
-
-	osg::Vec4 color_line, color_pt;
-	if (!config["PointColor"].IsSequence())
-	{
-		color_pt = osg::Vec4(1.f, 1.f, 1.f, 1.f);
-	}
-	else
-	{
-		std::vector<float> color_vec = config["PointColor"].as<std::vector<float>>();
-		color_pt = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
-	}
-	if (!config["LineColor"].IsSequence())
-	{
-		color_line = osg::Vec4(0.f, 0.f, 1.f, 1.f);
-	}
-	else
-	{
-		std::vector<float> color_vec = config["LineColor"].as<std::vector<float>>();
-		color_line = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
-	}
-
 	std::string base_path = config["MatchResultPath"].as<std::string>();
 	std::vector<std::string> match_files;
 	VF::GetFiles(base_path, ".mrf", match_files);
@@ -296,19 +287,76 @@ int main(int argc, char** argv)
 		LOG(WARNING) << "No match result is loaded!";
 	}
 
-	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_match(n_match);
-	std::vector<osg::ref_ptr<osg::Node>> nodeptr_vec_match_text(n_match);
-	float line_vertical_spacing = 0.f;
-	for (int i = 0; i < n_match; i++)
+	float pt_size = config["PointSize"].as<float>();
+	float line_width = config["LineWidth"].as<float>();
+
+	osg::Vec4 color_line, color_pt;
+	bool rand_color_tag = false;
+	rand_color_tag = config["RandomLinkColor"].as<bool>();
+	if (!rand_color_tag)
 	{
-		VN::lineNode line_node(match_files[i], color_pt, color_line, pt_size, line_width);
-		line_node.setAveOffset(offset_average);
-		nodeptr_vec_match[i] = line_node.getGeoNode();
-		std::string label = "No."+std::to_string(i)+" \t"+VisualTool::FileUtility::GetNameWithoutExt(match_files[i]) +
-			", matched numbers: " + std::to_string(line_node.getLineNum());
-		nodeptr_vec_match_text[i] = getHudTextNode(label, line_vertical_spacing);
-		line_vertical_spacing += 25;
+		if (!config["PointColor"].IsSequence())
+		{
+			color_pt = osg::Vec4(1.f, 1.f, 1.f, 1.f);
+		}
+		else
+		{
+			std::vector<float> color_vec = config["PointColor"].as<std::vector<float>>();
+			color_pt = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+		}
+		if (!config["LineColor"].IsSequence())
+		{
+			color_line = osg::Vec4(0.f, 0.f, 1.f, 1.f);
+		}
+		else
+		{
+			std::vector<float> color_vec = config["LineColor"].as<std::vector<float>>();
+			color_line = osg::Vec4(color_vec[0], color_vec[1], color_vec[2], color_vec[3]);
+		}
 	}
+
+	//std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_match(n_match);
+	std::vector<osg::ref_ptr<osg::Node>> nodeptr_vec_match_text(n_match);
+	//float line_vertical_spacing = 0.f;
+	//std::srand(int(time(0)));
+	//for (int i = 0; i < n_match; i++)
+	//{
+	//	color_pt = osg::Vec4(0.0, 1.0, 0.0, 1.0);
+	//	if (rand_color_tag)
+	//	{
+	//		float r = (rand() % 10) * 0.1;
+	//		float g = (rand() % 10) * 0.1;
+	//		float b = (rand() % 10) * 0.1;
+	//		color_line = osg::Vec4(r, g, b, 0.8);
+	//	}
+	//	// for better visualization the difference between two match results
+	//	if (i == 0)
+	//	{
+	//		color_line = osg::Vec4(0.2f, 0.2f, 0.5f, 1.f); // gray with more transparent
+	//		line_width = 2.f;
+	//	}
+	//	if (i == 1)
+	//	{
+	//		color_line = osg::Vec4(1.f, 0.f, 0.f, 1.f); // green without transparent
+	//		line_width = config["LineWidth"].as<float>();
+	//	}
+	//	VN::lineNode line_node(match_files[i], color_pt, color_line, pt_size, line_width);
+	//	line_node.setAveOffset(offset_average);
+	//	line_node.setTransformation(prior_trans);
+	//	nodeptr_vec_match[i] = line_node.getGeoNode();
+	//	std::string label = "No."+std::to_string(i)+" \t"+VisualTool::FileUtility::GetNameWithoutExt(match_files[i]) +
+	//		", matched numbers: " + std::to_string(line_node.getLineNum());
+	//	nodeptr_vec_match_text[i] = getHudTextNode(label, line_vertical_spacing);
+	//	line_vertical_spacing += 25;
+	//	// weight 1 second for random time seed generation
+	//	Sleep(1000);
+	//}
+
+	std::vector<osg::ref_ptr<osg::Geode>> nodeptr_vec_match;
+	VN::lineNode line_node("", color_pt, color_line, pt_size, line_width);
+	line_node.setAveOffset(offset_average);
+	line_node.setTransformation(prior_trans);
+	nodeptr_vec_match.push_back(line_node.getMergedGeoNode(match_files[1], match_files[0]));
 
 	// base root node
 	//osg::ref_ptr<osg::Group> root = new osg::Group;
@@ -326,18 +374,23 @@ int main(int argc, char** argv)
 		root->addChild(node);
 	}
 	// text display
-	for (auto node : nodeptr_vec_match_text)
+	bool txt_tag = false;
+	txt_tag = config["ShowText"].as<bool>();
+	if (txt_tag)
 	{
-		root->addChild(node);
+		for (auto node : nodeptr_vec_match_text)
+		{
+			root->addChild(node);
+		}
 	}
-
+	std::cout << "Current node num: "<<root->getNumChildren() << std::endl;
 	// check whether to save nodes
 	std::thread *saveNode_thread_1, *saveNode_thread_2, *saveNode_thread_3;
 	std::promise<int> saveNode_promise_obj_1, saveNode_promise_obj_2, saveNode_promise_obj_3;
 	std::future<int> saveNode_future_1 = saveNode_promise_obj_1.get_future();
 	std::future<int> saveNode_future_2 = saveNode_promise_obj_2.get_future();
 	std::future<int> saveNode_future_3 = saveNode_promise_obj_3.get_future();
-	if (std::stoi(config["SaveNodes"].as<std::string>()) == 1)
+	if (config["SaveNodes"].as<bool>())
 	{
 		LOG(INFO) << "Begin to save nodes, current thread id is: " << std::this_thread::get_id();
 		// in sub thread
@@ -403,8 +456,8 @@ int main(int argc, char** argv)
 	viewer.setSceneData(root.get());
 	viewer.home();
 
-	//这里是单屏幕显示
-	viewer.setUpViewOnSingleScreen(1);
+	// for single screen visualization, 0,1 represent different screens
+	viewer.setUpViewOnSingleScreen(0);
 
 	osgViewer::GraphicsWindow *pWnd = dynamic_cast<osgViewer::GraphicsWindow*>(viewer.getCamera()->getGraphicsContext());
 	if (pWnd)
@@ -413,14 +466,13 @@ int main(int argc, char** argv)
 	}
 
 	//check whether the sub saveNode_thread is still existed or not
-	if (std::stoi(config["SaveNodes"].as<std::string>()) == 1)
+	if (config["SaveNodes"].as<bool>())
 	{
 		if (saveNode_future_1.get() == n_patch1 && saveNode_future_2.get() == n_patch2 && saveNode_future_3.get() == n_match)
 		{
 			LOG(INFO) << "Whole node files are successfully saved!";
 		}
 	}
-
 	viewer.setThreadingModel(osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext);
 	viewer.realize();
 	viewer.run();

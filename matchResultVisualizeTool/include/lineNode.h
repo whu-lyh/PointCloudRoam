@@ -14,6 +14,8 @@
 #include <osgViewer/Viewer>
 #include <osg/ShapeDrawable>
 #include <osg/LineWidth>
+#include <osg/BlendColor>
+#include <osg/BlendFunc>
 #include <osgDB/WriteFile>
 #include <osgDB/Registry>
 
@@ -30,14 +32,17 @@ namespace VisualTool {
 				const osg::Vec4 line_color = osg::Vec4(0.f, 0.f, 1.f, 1.f), const float radius = 0.1f, const float width = 0.1f);
 
 			osg::ref_ptr<osg::Geode> getGeoNode();
+			osg::ref_ptr<osg::Geode> getMergedGeoNode(const std::string &file1, const std::string &file2);
 			int getLineNum();
 			void setAveOffset(const VisualTool::Offset &off);
+			void setTransformation(const Eigen::Matrix4f &trans);
 
 		private:
 			std::string m_sFile_path;
 			osg::ref_ptr<osg::Geode> m_pGeoNode;
 			int m_iNum;
 			VisualTool::Offset m_offset;
+			Eigen::Matrix4f m_trans;
 			osg::Vec4 m_v4ptColor;
 			osg::Vec4 m_v4lineColor;
 			float m_fradius;

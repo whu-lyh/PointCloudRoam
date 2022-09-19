@@ -1,9 +1,9 @@
 %YAML:1.0
 #Data info
 ##dataset wuhan GI
-PointFilepathOrigin: "F:/shanghai/Lu-block-data/All-in-lu/ORIGIN"
-PointFilepathRefine: "F:/shanghai/Lu-block-data/All-in-lu/REFINE"
-TrajectoryFile: "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj"
+PointFilepathOrigin: "H:/1_P2M_Robust_Test/4_Wuhan_gaojia/pc"
+PointFilepathRefine: "H:/2_P2M_Robust_Test_Result/4_Wuhan_gaojia/finePointClouds_result"
+TrajectoryFile: "H:/2_P2M_Robust_Test_Result/4_Wuhan_gaojia/traj_xyz.traj"
 
 #dataset shanghai
 #PointFilepathOrigin: "F:/Data/Zhangjiang8Block/outPC/origin"
@@ -31,7 +31,7 @@ TrajectoryFile: "F:/shanghai/Lu-block-data/All-in-lu/small-trajfile.traj"
 #Initial viewport is along down direction, so heading is rotate to along the y positive direction, rotate axis is x axis 
 
 #y point to the trajectory direction, -z point to down view, y-down-45 point to y axis and 45 degree
-ViewportDirection: "-z"
+ViewportDirection: "y"
 #speed is  //larger ==> slower
 RoamSpeed: 0.5
 OpenPerspective: 1
